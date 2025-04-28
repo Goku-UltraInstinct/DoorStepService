@@ -15,5 +15,20 @@ public class VendorController {
     public String go2(){
     return "AdminManageServiceProviders";
     }
+    
+    @GetMapping("/VendorLogin")
+    public String go3(){
+    return "VendorLogin";
+    }
+    
+    @GetMapping("/VendorHome")
+    public String go4(){
+    return "VendorHome";
+    }
+    
+    @GetMapping("/VendorManagePhotos")
+    public String go5(){
+    return "VendorManagePhotos";
+    }
 }
 
