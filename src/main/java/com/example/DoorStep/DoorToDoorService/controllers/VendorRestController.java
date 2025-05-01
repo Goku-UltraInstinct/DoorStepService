@@ -59,8 +59,8 @@ public class VendorRestController {
                 rs.updateString("vpass", vpass);
                 rs.updateInt("vservice", Integer.parseInt(vservice));
                 rs.updateString("vsubservice", vsubservice);
-                rs.updateString("vstart-time", vstartTime);
-                rs.updateString("vend-time", vendTime);
+                rs.updateString("vstart_time", vstartTime);
+                rs.updateString("vend_time", vendTime);
                 rs.updateString("vprice", vprice);
                 rs.updateString("vcontact", vcontact);
                 rs.updateString("vphoto", orgName);
@@ -187,7 +187,6 @@ public class VendorRestController {
         }
     }
 
-    
     @PostMapping("/DeletePhoto")
     public String deletePhoto(@RequestParam int pid) {
         try {
@@ -202,5 +201,34 @@ public class VendorRestController {
             ex.printStackTrace();
             return "exception";
         }
+    }
+
+    @PostMapping("/getDetails")
+    public String getDetails(@RequestParam String email, HttpSession session) {
+        try {
+            ResultSet rs = DbLoader.executeSQL("select * from vendor where vemail='" + email + "'");
+            if (rs.next()) {
+                session.setAttribute("vid", rs.getInt("vid"));
+                return "success";
+            } else {
+                return "failed";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "exception";
+        }
+    }
+    
+    @PostMapping("/getEditData")
+    public String getEditData(HttpSession session)
+    {
+        int vid = (int) session.getAttribute("vid");
+        
+        System.out.println("VID");
+        System.out.println(vid);
+        
+       String ans = new RDBMS_TO_JSON().generateJSON("select * from vendor where vid ="+vid+" ");
+       
+       return ans;
     }
 }

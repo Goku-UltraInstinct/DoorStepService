@@ -30,5 +30,10 @@ public class VendorController {
     public String go5(){
     return "VendorManagePhotos";
     }
+    
+    @GetMapping("/EditDetail")
+    public String go6(){
+    return "EditDetail";
+    }
 }
 
