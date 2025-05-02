@@ -203,32 +203,45 @@ public class VendorRestController {
         }
     }
 
-    @PostMapping("/getDetails")
-    public String getDetails(@RequestParam String email, HttpSession session) {
+    @PostMapping("/getEditData")
+    public String getEditData(HttpSession session) {
+        int vid = (int) session.getAttribute("vid");
+
+        System.out.println("VID");
+        System.out.println(vid);
+
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from vendor where vid =" + vid + " ");
+
+        return ans;
+    }
+
+    @PostMapping("/updateDetails")
+    public String updateDetails(@RequestParam String vname,
+            @RequestParam String vstartTime,
+            @RequestParam String vendTime,
+            @RequestParam String vprice,
+            @RequestParam String vcontact,
+            @RequestParam String vdesc,
+            HttpSession session
+    ) {
         try {
-            ResultSet rs = DbLoader.executeSQL("select * from vendor where vemail='" + email + "'");
-            if (rs.next()) {
-                session.setAttribute("vid", rs.getInt("vid"));
+            int vid = (int) session.getAttribute("vid");
+            ResultSet rs = DbLoader.executeSQL("select * from vendor where vid='" + vid + "'");
+            if (rs.next()) {  // Move to the first row
+                rs.updateString("vname", vname);
+                rs.updateString("vstart_time", vstartTime);
+                rs.updateString("vend_time", vendTime);
+                rs.updateString("vprice", vprice);
+                rs.updateString("vcontact", vcontact);
+                rs.updateString("vdesc", vdesc);
+                rs.updateRow();  // Commit the update to the DB
                 return "success";
             } else {
-                return "failed";
+                return "not_found";
             }
         } catch (Exception ex) {
             ex.printStackTrace();
             return "exception";
         }
-    }
-    
-    @PostMapping("/getEditData")
-    public String getEditData(HttpSession session)
-    {
-        int vid = (int) session.getAttribute("vid");
-        
-        System.out.println("VID");
-        System.out.println(vid);
-        
-       String ans = new RDBMS_TO_JSON().generateJSON("select * from vendor where vid ="+vid+" ");
-       
-       return ans;
     }
 }

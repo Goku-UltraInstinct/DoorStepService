@@ -52,6 +52,42 @@
                 document.getElementById("vdesc").value = arr[0].vdesc;
 
             }
+
+            function updateDetails() {
+
+                var formData = new FormData();
+
+                formData.append("vname", document.getElementById("vname").value);
+                formData.append("vstartTime", document.getElementById("vstartTime").value);
+                formData.append("vendTime", document.getElementById("vendTime").value);
+                formData.append("vprice", document.getElementById("vprice").value);
+                formData.append("vcontact", document.getElementById("vcontact").value);
+                formData.append("vdesc", document.getElementById("vdesc").value);
+
+                fetch("/updateDetails", {
+                    method: "POST",
+                    body: formData
+                })
+                        .then(response => response.text())
+                        .then(ans => {
+                            if (ans.trim() === "success") {
+                                renderHTML3(ans);
+                            } else {
+                                renderHTML3(ans);
+                            }
+                        });
+            }
+            function renderHTML3(ans) {
+                console.log(ans);
+                if (ans === "success") {
+                    alert("Details Updated successfully!");
+                } else if (ans === "not_found") {
+                    alert("Vendor not found.");
+                } else {
+                    alert("Something went wrong: " + ans);
+                }
+            }
+
         </script>
     </head>
 
@@ -320,69 +356,114 @@
                                 <!-- Vendor Form Extension -->
                                 <div class="row">
                                     <!-- Name -->
-                                    <div class="col-md-6 mil-mb-15">
+                                    <div class="col-md-2 mil-mb-15 d-flex align-items-center">
+                                        <label class="mil-fs-20 mil-fw-600 mil-m-3">
+                                            <i class="far fa-user mil-a-1 me-2"></i> Vendor Name
+                                        </label>
+                                    </div>
+                                    <div class="col-md-10 mil-mb-15">
                                         <div class="mil-input-frame">
                                             <input type="text" id="vname" name="vname" placeholder="Vendor Name" class="mil-br-md mil-bg-m-1 mil-m-3">
-                                            <i class="far fa-user mil-a-1"></i>
                                         </div>
                                     </div>
 
-                                    <!-- Service (readonly) -->
-                                    <div class="col-md-6 mil-mb-15">
+                                    <!-- Service -->
+                                    <div class="col-md-2 mil-mb-15 d-flex align-items-center">
+                                        <label class="mil-fs-20 mil-fw-600 mil-m-3">
+                                            <i class="far fa-concierge-bell mil-a-1 me-2"></i> Service
+                                        </label>
+                                    </div>
+                                    <div class="col-md-10 mil-mb-15">
                                         <div class="mil-input-frame">
                                             <input type="text" id="vservice" name="vservice" placeholder="Service" class="mil-br-md mil-bg-m-1 mil-m-3" readonly>
-                                            <i class="far fa-concierge-bell mil-a-1"></i>
                                         </div>
                                     </div>
 
-                                    <!-- Subservice (readonly) -->
-                                    <div class="col-md-6 mil-mb-15">
+                                    <!-- Subservice -->
+                                    <div class="col-md-2 mil-mb-15 d-flex align-items-center">
+                                        <label class="mil-fs-20 mil-fw-600 mil-m-3">
+                                            <i class="far fa-list-alt mil-a-1 me-2"></i> Subservice
+                                        </label>
+                                    </div>
+                                    <div class="col-md-10 mil-mb-15">
                                         <div class="mil-input-frame">
                                             <input type="text" id="vsubservice" name="vsubservice" placeholder="Subservice" class="mil-br-md mil-bg-m-1 mil-m-3" readonly>
-                                            <i class="far fa-list-alt mil-a-1"></i>
                                         </div>
                                     </div>
 
                                     <!-- Start Time -->
-                                    <div class="col-md-6 mil-mb-15">
+                                    <div class="col-md-2 mil-mb-15 d-flex align-items-center">
+                                        <label class="mil-fs-20 mil-fw-600 mil-m-3">
+                                            <i class="far fa-clock mil-a-1 me-2"></i> Start Time
+                                        </label>
+                                    </div>
+                                    <div class="col-md-10 mil-mb-15">
                                         <div class="mil-input-frame">
                                             <input type="text" id="vstartTime" name="vstartTime" placeholder="Start Time" class="mil-br-md mil-bg-m-1 mil-m-3">
-                                            <i class="far fa-clock mil-a-1"></i>
                                         </div>
                                     </div>
 
                                     <!-- End Time -->
-                                    <div class="col-md-6 mil-mb-15">
+                                    <div class="col-md-2 mil-mb-15 d-flex align-items-center">
+                                        <label class="mil-fs-20 mil-fw-600 mil-m-3">
+                                            <i class="far fa-clock mil-a-1 me-2"></i> End Time
+                                        </label>
+                                    </div>
+                                    <div class="col-md-10 mil-mb-15">
                                         <div class="mil-input-frame">
                                             <input type="text" id="vendTime" name="vendTime" placeholder="End Time" class="mil-br-md mil-bg-m-1 mil-m-3">
-                                            <i class="far fa-clock mil-a-1"></i>
                                         </div>
                                     </div>
 
                                     <!-- Price -->
-                                    <div class="col-md-6 mil-mb-15">
+                                    <div class="col-md-2 mil-mb-15 d-flex align-items-center">
+                                        <label class="mil-fs-20 mil-fw-600 mil-m-3">
+                                            <i class="far fa-money-bill mil-a-1 me-2"></i> Price
+                                        </label>
+                                    </div>
+                                    <div class="col-md-10 mil-mb-15">
                                         <div class="mil-input-frame">
                                             <input type="number" id="vprice" name="vprice" placeholder="Price" step="0.01" class="mil-br-md mil-bg-m-1 mil-m-3">
-                                            <i class="far fa-money-bill mil-a-1"></i>
                                         </div>
                                     </div>
 
                                     <!-- Contact -->
-                                    <div class="col-md-6 mil-mb-15">
+                                    <div class="col-md-2 mil-mb-15 d-flex align-items-center">
+                                        <label class="mil-fs-20 mil-fw-600 mil-m-3">
+                                            <i class="far fa-phone mil-a-1 me-2"></i> Contact
+                                        </label>
+                                    </div>
+                                    <div class="col-md-10 mil-mb-15">
                                         <div class="mil-input-frame">
                                             <input type="tel" id="vcontact" name="vcontact" placeholder="Contact" class="mil-br-md mil-bg-m-1 mil-m-3">
-                                            <i class="far fa-phone mil-a-1"></i>
                                         </div>
                                     </div>
 
                                     <!-- Description -->
-                                    <div class="col-lg-12 mil-mb-30">
+                                    <div class="col-md-2 mil-mb-30 d-flex align-items-center">
+                                        <label class="mil-fs-20 mil-fw-600 mil-m-3">
+                                            <i class="far fa-comment-alt mil-a-1 me-2"></i> Description
+                                        </label>
+                                    </div>
+                                    <div class="col-md-10 mil-mb-30">
                                         <div class="mil-input-frame mil-type-2">
                                             <textarea id="vdesc" name="vdesc" placeholder="Description" class="mil-br-md mil-bg-m-1 mil-m-3"></textarea>
-                                            <i class="far fa-comment-alt mil-a-1"></i>
+                                        </div>
+                                    </div>
+
+                                    <!-- Button Row -->
+                                    <div class="col-lg-12 mil-mb-30">
+                                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                            <p class="mil-fs-20 mil-m-2 mil-tal mb-0">
+                                                By clicking the send button, you agree to the rules for processing personal data
+                                            </p>
+                                            <button class="mil-btn mil-bg-a-1 mil-icon-btn mil-br-xl mil-hover-bri-105 mil-hover-scale mil-m-2" type="button" onclick="updateDetails()">
+                                                Update <i class="far fa-arrow-right mil-bg-m-1 mil-a-1"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
