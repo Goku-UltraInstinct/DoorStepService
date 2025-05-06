@@ -73,41 +73,19 @@
             });
         </script>
         <script>
-            function getDetails() {
-                fetch("/getEditData", {method: "POST"})
-                        .then(response => response.text())
-                        .then(ans => renderAsHtml(ans));
-            }
 
-            function renderAsHtml(ans) {
-                console.log("IN CONSOLE.LOG");
-                console.log(ans);
-
-                var mainobj = JSON.parse(ans);
-                var arr = mainobj["ans"];
-                document.getElementById("vname").value = arr[0].vname;
-                document.getElementById("vservice").value = arr[0].vservice;
-                document.getElementById("vsubservice").value = arr[0].vsubservice;
-                document.getElementById("vstartTime").value = arr[0].vstart_time;
-                document.getElementById("vendTime").value = arr[0].vend_time;
-                document.getElementById("vprice").value = arr[0].vprice;
-                document.getElementById("vcontact").value = arr[0].vcontact;
-                document.getElementById("vdesc").value = arr[0].vdesc;
-
-            }
-
-            function updateDetails() {
+            function userSignUp() {
 
                 var formData = new FormData();
 
-                formData.append("vname", document.getElementById("vname").value);
-                formData.append("vstartTime", document.getElementById("vstartTime").value);
-                formData.append("vendTime", document.getElementById("vendTime").value);
-                formData.append("vprice", document.getElementById("vprice").value);
-                formData.append("vcontact", document.getElementById("vcontact").value);
-                formData.append("vdesc", document.getElementById("vdesc").value);
+                formData.append("uname", document.getElementById("uname").value);
+                formData.append("uemail", document.getElementById("uemail").value);
+                formData.append("upass", document.getElementById("upass").value);
+                formData.append("uphoto", document.getElementById("uphoto").files[0]);
+                formData.append("uaddress", document.getElementById("uaddress").value);
+                formData.append("ucontact", document.getElementById("ucontact").value);
 
-                fetch("/updateDetails", {
+                fetch("/signUp", {
                     method: "POST",
                     body: formData
                 })
@@ -123,9 +101,10 @@
             function renderHTML3(ans) {
                 console.log(ans);
                 if (ans === "success") {
-                    alert("Details Updated successfully!");
-                } else if (ans === "not_found") {
-                    alert("Vendor not found.");
+                    alert("User Added successfully!");
+                    window.location.href="/UserLogin";
+                } else if (ans === "exists") {
+                    alert("User Already Exists.");
                 } else {
                     alert("Something went wrong: " + ans);
                 }
@@ -479,7 +458,7 @@
                                             <p class="mil-fs-20 mil-m-2 mil-tal mb-0">
                                                 By clicking update, you agree to the rules for processing personal data
                                             </p>
-                                            <button type="button" class="mil-btn mil-bg-a-1 mil-icon-btn mil-br-xl mil-hover-bri-105 mil-hover-scale mil-m-2" onclick="updateUser()">
+                                            <button type="button" class="mil-btn mil-bg-a-1 mil-icon-btn mil-br-xl mil-hover-bri-105 mil-hover-scale mil-m-2" onclick="userSignUp()">
                                                 Update <i class="far fa-arrow-right mil-bg-m-1 mil-a-1"></i>
                                             </button>
                                         </div>

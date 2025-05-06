@@ -10,4 +10,14 @@ public class UserController {
     public String go() {
         return "UserSignUp";
     } 
+    
+    @GetMapping("/UserLogin")
+    public String go2() {
+        return "UserLogin";
+    }
+
+    @GetMapping("/UserHome")
+    public String go3() {
+        return "UserHome";
+    }
 }
