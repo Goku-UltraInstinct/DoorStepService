@@ -615,95 +615,91 @@
         <!-- main js -->
         <script src="js/main.js"></script>
         <script>
-                                                    function go() {
-                                                        var photo = document.getElementById("photo").files[0];
-                                                        var pdesc = document.getElementById("pdesc").value;
-                                                        var formdata = new FormData();
-                                                        formdata.append("p", photo);
-                                                        formdata.append("pd", pdesc); // Note: remove extra space after "cd"
+            function go() {
+                var photo = document.getElementById("photo").files[0];
+                var pdesc = document.getElementById("pdesc").value;
+                var formdata = new FormData();
+                formdata.append("p", photo);
+                formdata.append("pd", pdesc); // Note: remove extra space after "cd"
 
-                                                        fetch("/VendorManagePhotos", {
-                                                            method: "POST",
-                                                            body: formdata
-                                                        })
-                                                                .then(response => response.text())
-                                                                .then(ans => {
-                                                                    if (ans.trim() === "success") {
-                                                                        renderHTML(ans);
-                                                                    }
-                                                                });
-                                                    }
-                                                    function renderHTML(ans) {
-                                                        console.log(ans);
-                                                        if (ans === "success") {
-                                                            alert("Photo added successfully!");
-                                                        } else {
-                                                            alert("Something went wrong: " + ans);
-                                                        }
-                                                    }
+                fetch("/VendorManagePhotos", {
+                    method: "POST",
+                    body: formdata
+                })
+                        .then(response => response.text())
+                        .then(ans => {
+                            if (ans.trim() === "success") {
+                                renderHTML(ans);
+                            }
+                        });
+            }
+            function renderHTML(ans) {
+                console.log(ans);
+                if (ans === "success") {
+                    alert("Photo added successfully!");
+                } else {
+                    alert("Something went wrong: " + ans);
+                }
+            }
 
+            function getPhotos() {
+                fetch("/AdminShowPhotos", {method: "POST"})
+                        .then(response => response.text())
+                        .then(ans => renderAsHtml(ans));
+            }
 
-                                                    function getPhotos() {
-                                                        fetch("/AdminShowPhotos", {method: "POST"})
-                                                                .then(response => response.text())
-                                                                .then(ans => renderAsHtml(ans));
-                                                    }
+            function renderAsHtml(ans) {
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                var s = '<div class="container">';
 
-                                                    function renderAsHtml(ans) {
-    var mainobj = JSON.parse(ans);
-    var arr = mainobj["ans"];
-    var s = '<div class="container">';
+                for (var i = 0; i < arr.length; i++) {
+                    var pt = arr[i];
+                    var imgPath = "myUploads/" + pt.photo;
+                    var pdesc = pt.pdesc;
+                    var pid = pt.pid;
 
-    for (var i = 0; i < arr.length; i++) {
-        var pt = arr[i];
-        var imgPath = "myUploads/" + pt.photo;
-        var pdesc = pt.pdesc;
-        var pid = pt.pid;
-
-        s += `
-        <div class="card clickable-card mb-4 shadow-sm">
-            <div class="row g-0 align-items-center text-center text-sm-start">
-                <div class="col-12 col-sm-3 d-flex justify-content-center align-items-center">
-                    <img src="${imgPath}" class="img-fluid rounded" style="height: 200px; object-fit: cover;" alt="Image">
-                </div>
-                <div class="col-12 col-sm-7 d-flex justify-content-center align-items-center">
-                    <div class="card-body p-3 text-center">
-                        <h3 class="card-title mb-1">${pdesc}</h3>
+                    s += `
+                    <div class="card clickable-card mb-4 shadow-sm">
+                        <div class="row g-0 align-items-center text-center text-sm-start">
+                            <div class="col-12 col-sm-3 d-flex justify-content-center align-items-center">
+                                <img src="${imgPath}" class="img-fluid rounded" style="height: 200px; object-fit: cover;" alt="Image">
+                            </div>
+                            <div class="col-12 col-sm-7 d-flex justify-content-center align-items-center">
+                                <div class="card-body p-3 text-center">
+                                    <h3 class="card-title mb-1">${pdesc}</h3>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center mt-3 mt-sm-0">
+                                <div onclick="deletePhoto('${pid}', this)" class="delete-btn">Delete</div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center mt-3 mt-sm-0">
-                    <div onclick="deletePhoto('${pid}', this)" class="delete-btn">Delete</div>
-                </div>
-            </div>
-        </div>
-        `;
-    }
+                    `;
+                }
 
-    s += '</div>';
-    document.getElementById("d1").innerHTML = s;
-}
+                s += '</div>';
+                document.getElementById("d1").innerHTML = s;
+            }
+            
+            function deletePhoto(pid) {
+                let formdata = new FormData();
+                formdata.append("pid", pid);
 
-
-
-
-                                                    function deletePhoto(pid) {
-                                                        let formdata = new FormData();
-                                                        formdata.append("pid", pid);
-
-                                                        fetch("/DeletePhoto", {
-                                                            method: "POST",
-                                                            body: formdata
-                                                        })
-                                                                .then(response => response.text())
-                                                                .then(ans => {
-                                                                    if (ans.trim() === "success") {
-                                                                        const card = el.closest(".card");
-                                                                        card.classList.add("fade-out");
-                                                                        setTimeout(() => card.remove(), 500); // Wait for fade animation
-                                                                    } else {
-                                                                        alert("Delete failed: " + ans);
-                                                                    }
-                                                                });
-                                                    }
+                fetch("/DeletePhoto", {
+                    method: "POST",
+                    body: formdata
+                })
+                .then(response => response.text())
+                .then(ans => {
+                    if (ans.trim() === "success") {
+                        const card = el.closest(".card");
+                        card.classList.add("fade-out");
+                        setTimeout(() => card.remove(), 500); // Wait for fade animation
+                    } else {
+                        alert("Delete failed: " + ans);
+                    }
+                });
+            }
         </script>
     </body>

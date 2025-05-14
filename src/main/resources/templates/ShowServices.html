@@ -80,45 +80,62 @@
 
         </style>
         <script>
-            function getCities()
+            function getCid()
             {
-                fetch("/getAllCities")
+                const params = new URLSearchParams(window.location.search);
+                const cid = params.get('cid');
+                var formdata = new FormData();
+                formdata.append("cid", cid);
+
+                fetch("/showServices", {
+                    method: "POST",
+                    body: formdata
+                })
                         .then(response => response.text())
-                        .then(ans => renderHTML(ans));
+                        .then(ans => renderHTML(ans));  // separate function
+
+                console.log(cid);
+
             }
 
             function renderHTML(ans) {
+//                alert(ans);
                 var mainobj = JSON.parse(ans);
                 var arr = mainobj["ans"];
                 var s = '<div class="container"><div class="row">';
 
                 for (var i = 0; i < arr.length; i++) {
-                    var ct = arr[i];
-                    var imgPath = "myUploads/" + ct.cityphoto;
-                    var cdesc = ct.citydesc;
-                    var cid = ct.cityid;
-                    var cn = ct.cityname;
+                    var st = arr[i];
+                    var imgPath = "myUploads/" + st.sphoto;
+                    var sid = st.sid;
+                    var sn = st.sname;
 
                     s += `
-        <div class="col-12 col-sm-6 col-lg-3 mb-4">
-            <div class="card clickable-card shadow-sm h-100">
-                <img src="${imgPath}" class="img-fluid rounded-top" style="height: 200px; object-fit: cover;" alt="Image">
-                <div class="card-body text-center d-flex flex-column justify-content-between">
-                    <h3 class="card-title mb-3">${cdesc}</h3>
-                    <div class="btn btn-primary city-name-btn">${cn}</div>
-                </div>
-            </div>
-        </div>
-        `;
+                    <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                        <div class="card clickable-card shadow-sm h-100" style="cursor: pointer;" onclick="goToVendors('${sid}')">
+                            <img src="${imgPath}" class="img-fluid rounded-top" style="height: 200px; object-fit: cover;" alt="Image">
+                            <div class="card-body text-center d-flex flex-column justify-content-between">
+                                <div class="btn btn-primary city-name-btn">${sn}</div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
                 }
-
                 s += '</div></div>';
                 document.getElementById("d1").innerHTML = s;
             }
+
+            function goToVendors(sid) {
+                const params = new URLSearchParams(window.location.search);
+                const cid = params.get('cid'); // Get current cid from URL
+                var url = "/ShowAvailableVendors?sid=" + sid + "&cid=" + cid;
+                window.location.href = url;
+            }
+
         </script>
     </head>
 
-    <body onload="getCities()">
+    <body onload="getCid()">
 
         <!-- page wrapper -->
         <div class="mil-page-wrapper">

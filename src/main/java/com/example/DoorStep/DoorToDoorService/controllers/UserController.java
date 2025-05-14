@@ -20,4 +20,14 @@ public class UserController {
     public String go3() {
         return "UserHome";
     }
+    
+    @GetMapping("/ShowServices")
+    public String go4() {
+        return "ShowServices";
+    }
+    
+    @GetMapping("/ShowAvailableVendors")
+    public String go5() {
+        return "ShowAvailableVendors";
+    }
 }

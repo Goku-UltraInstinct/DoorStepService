@@ -69,11 +69,55 @@ public class UserRestController {
             return "exception";
         }
     }
-    
+
     @GetMapping("/getAllCities")
     public String getCities() {
         String ans = new RDBMS_TO_JSON().generateJSON("select * from cities");
 
         return ans;
     }
+
+    @PostMapping("/showServices")
+    public String showServices(@RequestParam("cid") String cid) {
+        try {
+            System.out.println("Received cid: " + cid); // Optional: for logging/debugging
+            int cityid = Integer.parseInt(cid); // Use the correct variable name
+            String ans = new RDBMS_TO_JSON().generateJSON(
+                    //  "SELECT DISTINCT services.* FROM services JOIN vendors ON v_service = services.service_id WHERE v_city = " + cityid + " AND v_status = 'Blocked'"
+                    "SELECT DISTINCT s.sid, s.sname, s.sdesc, s.sphoto, "
+                    + "MIN(v.vprice) AS minprice " + "FROM services s JOIN vendor v ON v.vservice = s.sid "
+                    + "WHERE v.vcity = " + cityid + " AND v.status = 'approved' "
+                    + "GROUP BY s.sid, s.sname, s.sdesc, s.sphoto"
+            );
+            return ans;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "exception";
+        }
+    }
+
+    @PostMapping("/showVendors")
+    public String showVendors(@RequestParam("cid") String cid, @RequestParam("sid") String sid) {
+        try {
+            System.out.println("Received cid: " + cid); // Optional: for logging/debugging
+            System.out.println("Received sid: " + sid); // Optional: for logging/debugging
+
+            int cityid = Integer.parseInt(cid); // Use the correct variable name
+            int serviceid = Integer.parseInt(sid); // Use the correct variable name
+
+            String ans = new RDBMS_TO_JSON().generateJSON(
+                    "SELECT v.vid, v.vname, v.vprice, v.vphoto, s.sname "
+                    + "FROM vendor v "
+                    + "JOIN services s ON v.vservice = s.sid "
+                    + "WHERE v.vcity = " + cityid + " "
+                    + "AND v.vservice = " + serviceid + " "
+                    + "AND v.status = 'approved'"
+            );
+            return ans;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "exception";
+        }
+    }
+
 }

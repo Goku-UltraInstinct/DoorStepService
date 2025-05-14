@@ -80,51 +80,53 @@
 
         </style>
         <script>
-            function getCities()
+            function getCidSid()
             {
-                fetch("/getAllCities")
-                        .then(response => response.text())
-                        .then(ans => renderHTML(ans));
+            const params = new URLSearchParams(window.location.search);
+            const cid = params.get('cid');
+            const sid = params.get('sid');
+            var formdata = new FormData();
+            formdata.append("cid", cid);
+            formdata.append("sid", sid);
+            fetch("/showVendors", {
+            method: "POST",
+                    body: formdata
+            })
+                    .then(response => response.text())
+                    .then(ans => renderHTML(ans)); // separate function
+
+            console.log(cid);
             }
 
             function renderHTML(ans) {
-                var mainobj = JSON.parse(ans);
-                var arr = mainobj["ans"];
-                var s = '<div class="container"><div class="row">';
-
+//                alert(ans);
+            var mainobj = JSON.parse(ans);
+            var arr = mainobj["ans"];
+            var s = '<div class="container"><div class="row">';
                 for (var i = 0; i < arr.length; i++) {
-                    var ct = arr[i];
-                    var imgPath = "myUploads/" + ct.cityphoto;
-                    var cdesc = ct.citydesc;
-                    var cid = ct.cityid;
-                    var cn = ct.cityname;
-
-                    s += `
+                var vd = arr[i];
+                var imgPath = "myUploads/" + vd.vphoto;
+                var vn = vd.vname;
+                s += `
                     <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                        <div class="card clickable-card shadow-sm h-100">
-                        <img src="${imgPath}" class="img-fluid rounded-top" style="height: 200px; object-fit: cover;" alt="Image">
+                        <div class="card clickable-card shadow-sm h-100" style="cursor: pointer;" onclick="">
+                            <img src="${imgPath}" class="img-fluid rounded-top" style="height: 200px; object-fit: cover;" alt="Image">
                             <div class="card-body text-center d-flex flex-column justify-content-between">
-                                <h3 class="card-title mb-3">${cdesc}</h3>
-                                <div class="btn btn-primary city-name-btn" onclick="goToServices('${cid}')">${cn}</div>
+                                <div class="btn btn-primary city-name-btn">${vn}</div>
                             </div>
                         </div>
                     </div>
-        `;
+                    `;
                 }
-
-                s += '</div></div>';
-                document.getElementById("d1").innerHTML = s;
-            }
-
-            function goToServices(cid) {
-                var url = "ShowServices?cid=" + cid;
-                window.location.href = url;
+            
+            s += '</div></div>';
+            document.getElementById("d1").innerHTML = s;
             }
 
         </script>
     </head>
 
-    <body onload="getCities()">
+    <body onload="getCidSid()">
 
         <!-- page wrapper -->
         <div class="mil-page-wrapper">
@@ -835,7 +837,7 @@
                                                         <div class="mil-aic mil-jcc mil-sm-jcb">
                                                             <span class="mil-m-1 mil-fw-600 mil-fs-18 mil-mr-15">Bedrooms:</span>
                                                             <div class="mil-bedrooms mil-aic">
-                                                                <button type="button" class="mil-room-btn" onclick="updateRoomCount('bedrooms', -1)">−</button>
+                                                                <button type="button" class="mil-room-btn" onclick="updateRoomCount('bedrooms', - 1)">−</button>
                                                                 <span id="bedrooms-count" class="mil-room-count">1</span>
                                                                 <button type="button" class="mil-room-btn" onclick="updateRoomCount('bedrooms', 1)">+</button>
                                                             </div>
@@ -845,7 +847,7 @@
                                                         <div class="mil-aic mil-jcc mil-sm-jcb">
                                                             <span class="mil-m-1 mil-fw-600 mil-fs-18 mil-mr-15">Bathrooms:</span>
                                                             <div class="mil-bathrooms mil-aic">
-                                                                <button type="button" class="mil-room-btn" onclick="updateRoomCount('bathrooms', -1)">−</button>
+                                                                <button type="button" class="mil-room-btn" onclick="updateRoomCount('bathrooms', - 1)">−</button>
                                                                 <span id="bathrooms-count" class="mil-room-count">1</span>
                                                                 <button type="button" class="mil-room-btn" onclick="updateRoomCount('bathrooms', 1)">+</button>
                                                             </div>
