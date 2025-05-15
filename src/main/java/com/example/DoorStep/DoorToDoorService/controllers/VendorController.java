@@ -10,7 +10,7 @@ public class VendorController {
     public String go(){
     return "VendorSignUp";
     }
-    
+
     @GetMapping("/AdminManageServiceProviders")
     public String go2(){
     return "AdminManageServiceProviders";
@@ -34,6 +34,11 @@ public class VendorController {
     @GetMapping("/EditDetail")
     public String go6(){
     return "EditDetail";
+    }
+    
+    @GetMapping("/UserShowServiceProvidersDetail")
+    public String go7(){
+    return "UserShowServiceProvidersDetail";
     }
 }
 
