@@ -120,4 +120,18 @@ public class UserRestController {
         }
     }
 
+    @PostMapping("/showServiceProviderDetails")
+    public String showVendorDetails(@RequestParam("vid") String vid) {
+        try {
+            System.out.println("Received vid: " + vid); // Optional: for logging/debugging
+
+            int vendorid = Integer.parseInt(vid); // Use the correct variable name
+
+            String ans = new RDBMS_TO_JSON().generateJSON("select * from vendor where vid = " + vendorid + "");
+            return ans;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "exception";
+        }
+    }
 }
