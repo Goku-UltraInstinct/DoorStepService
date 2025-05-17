@@ -2,7 +2,7 @@
 <html lang="zxx">
 
 
-    <!-- Mirrored from miller.bslthemes.com/cleandy-demo/publication.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 14 Apr 2025 12:28:14 GMT -->
+    <!-- Mirrored from miller.bslthemes.com/cleandy-demo/blog-2.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 14 Apr 2025 12:28:28 GMT -->
     <head>
 
         <meta charset="UTF-8">
@@ -25,95 +25,117 @@
         <link rel="stylesheet" href="css/style.css">
         <!-- page title -->
         <title>Cleandy</title>
-        <style>
-            .mil-publication i {
-                color: #EDCE29;
-                font-size: 2rem;
-                vertical-align: middle;
-                margin-right: 10px;
-            }
 
-            .mil-publication h4,
-            .mil-publication p {
-                display: flex;
-                align-items: center;
-                color: #fff;
-                font-weight: 500;
-                margin-bottom: 1rem;
-            }
-
-            .mil-publication strong {
-                color: #EDCE29;
-                font-weight: normal;
-                margin-right: 4px;
-            }
-
-            .mil-publication span {
-                color: #fff;
-                font-weight: 400;
-            }
-
-            .mil-publication blockquote {
-                background-color: #3f6ff5;
-                color: #fff;
-                padding: 12px 16px;
-                border-radius: 8px;
-                font-weight: 500;
-                display: flex;
-                align-items: center;
-            }
-        </style>
 
         <script>
-            var email = "";
-            function getVid()
-            {
-                const params = new URLSearchParams(window.location.search);
-                const vid = params.get('vid');
-                var formdata = new FormData();
-                formdata.append("vid", vid);
+            const params = new URLSearchParams(window.location.search);
+            const email = params.get('email');
+            function go() {
 
-                fetch("/showServiceProviderDetails", {
-                    method: "POST",
-                    body: formdata
-                })
-                        .then(response => response.text())
-                        .then(ans => renderHTML(ans));  // separate function
 
-                console.log(vid);
+
+
+                var s = document.getElementById("datepicker").value;
+                console.log(s);
+
+                if (s === '')
+                {
+                    alert("Choose Dates first");
+                } else {
+
+                    var url = "./view_slots?email=" + email + "&date=" + s;
+                    fetch(url)
+                            .then(response => response.text())
+                            .then(ans => renderhtml(ans));
+                }
+
 
             }
-            function renderHTML(ans) {
-                console.log(ans);
+
+            var slot_amount = 0;
+            function renderhtml(ans) {
                 var mainobj = JSON.parse(ans);
-                var arr = mainobj["ans"];
-                var imgPath = "myUploads/" + arr[0].vphoto;
+                var arr = mainobj.ans;
+                var count = 1;
+                var output = '<table class="table table-hover">';
+                output += ' <tr>';
+                output += ' <th>index number</th>';
+                output += '<th>start slot</th>';
+                output += '<th>end slot</th>';
 
-                document.getElementById("vphoto").innerHTML =
-                        `<img src="${imgPath}" class="img-fluid" style="height: 300px; object-fit: cover;" alt="Image">`;
-                email = arr[0].vemail;
-                document.getElementById("vname").textContent = arr[0].vname;     // Just the name, e.g., "Milie Perkins"
-                document.getElementById("vemail").textContent = arr[0].vemail;   // Just the email
-                document.getElementById("vstart_time").textContent = arr[0].vstart_time;
-                document.getElementById("vend_time").textContent = arr[0].vend_time;
-                document.getElementById("vdesc").textContent = arr[0].vdesc;
-                document.getElementById("vcontact").textContent = arr[0].vcontact;
-                document.getElementById("vprice").textContent = arr[0].vprice;
+                output += '<th>status</th>';
+                output += '</tr>';
+                for (var i = 0; i < arr.length; i++) {
+                    var obj = arr[i];
+                    output += '<tr>';
+                    if (obj.status === "Booked") {
+                        output += '<td><input type="checkbox" disabled/></td>';
+                    } else {
+                        output += '<td><input type="checkbox" name="c1" id="check" value="' + obj.start_slot + '" onchange="slot(this)" /></td>';
+                    }
+                    output += '<td>' + obj.start_slot + '</td>';
+                    output += '<td>' + obj.end_slot + '</td>';
+                    output += '<td>' + obj.status + '</td>';
+                    slot_amount = obj.slot_amount;
+
+                    output += '</tr>';
+                    count++;
+                }
+                output += '</table>';
+                document.getElementById("table").innerHTML = output;
 
             }
 
+            var count = 0;
+            var total = 0;
+            function slot(checkbox) {
 
+                if (checkbox.checked) {
 
+                    count++;
+                } else {
 
-            function call()
-            {
-                window.location.href = "/viewslot?email=" + email;
+                    count--;
+                }
+
+                total = count * slot_amount;
+                var output = '<table class="table table-hover">';
+                output += '<tr>';
+                output += '<td> Number of slots </td>';
+                output += '<td>' + count + '</td>';
+                output += '</tr>';
+                output += '<tr>';
+                output += '<td> total value </td>';
+                output += '<td>' + total + '</td>';
+                output += '</tr>';
+
+                output += '</table>';
+                output += '<input type="button" class="btn btn-primary form-control mt-2" value="click on the button to pay the value" onclick="pay()"/>';
+                document.getElementById("slot").innerHTML = output;
+            }
+
+            var allslots = '';
+            function pay() {
+
+                var c = document.getElementsByName("c1");
+                var date = document.getElementById("datepicker").value;
+
+                console.log(c);
+                for (var i = 0; i < c.length; i++) {
+
+                    if (c[i].checked) {
+                        allslots += c[i].value + ",";
+                    }
+                }
+                window.location.href = "/payment?date=" + date + "&email=" + email + "&total=" + total + "&slots=" + allslots + " ";
             }
 
         </script>
+
+
     </head>
 
-    <body onload="getVid()">
+    <body>
 
         <!-- page wrapper -->
         <div class="mil-page-wrapper">
@@ -327,24 +349,21 @@
                                     <div class="mil-column mil-sm-mb-0 mil-w-100">
                                         <div class="mil-aic">
                                             <div class="mil-word-frame">
-                                                <svg width="89" height="89" viewBox="0 0 89 89" fill="none" xmlns="http://www.w3.org/2000/svg" class="mil-text-star" style="top: -15%;right: -7%">
+                                                <svg width="89" height="89" viewBox="0 0 89 89" fill="none" xmlns="http://www.w3.org/2000/svg" class="mil-text-star" style="top: -15%;right: -15%">
                                                 <rect x="42.1406" y="13.0017" width="3.46874" height="62.7841" fill="#F6D62D" />
                                                 <rect x="13.0078" y="45.2607" width="3.46874" height="62.7841" transform="rotate(-90 13.0078 45.2607)" fill="#F6D62D" />
                                                 <rect x="21.5859" y="22.8096" width="3.46874" height="62.7841" transform="rotate(-45 21.5859 22.8096)" fill="#F6D62D" />
                                                 <rect x="22.8125" y="67.2046" width="3.46874" height="62.7841" transform="rotate(-135 22.8125 67.2046)" fill="#F6D62D" />
                                                 </svg>
-                                                <h1 class="mil-fs-100 mil-sm-fs-72 mil-lh-110">Secrets to Effective</h1>
+                                                <h1 class="mil-fs-100 mil-sm-fs-72 mil-lh-110">Tips & Tricks</h1>
                                             </div>
                                         </div>
-                                        <div class="mil-word-frame mil-mb-60">
-                                            <h1 class="mil-fs-100 mil-sm-fs-72 mil-lh-110"><img src="img/ui/t9.jpg" alt="image" class="mil-text-image mil-long"> Cleaning</h1>
+                                        <div class="mil-word-frame mil-mb-40">
+                                            <h1 class="mil-fs-100 mil-sm-fs-72 mil-lh-110"><img src="img/ui/t9.jpg" alt="image" class="mil-text-image mil-long"> In Our Blog</h1>
                                         </div>
                                         <div class="mil-aic">
-                                            <ul class="mil-category">
-                                                <li class="mil-bg-m-1 mil-up-text mil-m-3 mil-mr-5">Apartment</li>
-                                                <li class="mil-bg-a-1 mil-up-text mil-m-1 mil-mr-5">Post-construction</li>
-                                                <li class="mil-date">08, 24, 2024</li>
-                                            </ul>
+                                            <a href="services.html" class="mil-btn mil-icon-btn mil-bg-a-1 mil-br-xl mil-hover-bri-105 mil-hover-scale mil-mr-40">Learn more<i class="far fa-plus mil-bg-m-4 mil-m-1"></i></a>
+                                            <a href="contact.html" class="mil-link mil-m-1 mil-reverse">Contact us<i class="far fa-envelope mil-bg-a-2 mil-m-4" style="padding: .2rem 0 0 .2rem"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -377,195 +396,26 @@
                 </div>
                 <!-- hero end -->
 
-                <!-- cover -->
-                <div class="mil-p-0-f">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-4">
-                                <div id="vphoto">
-                                </div>
-                            </div> 
-                            <div class="col-8"></div>
-                        </div>
+                <div class="text-center alert alert-success" style="margin-top: 70px">
+                    <h3>Date: <input type="date" id="datepicker" class="alet alert-warning" onchange="go()"></h3>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 m-3  " id="table" >
+
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+
+                    </div>
+                    <div class="col-sm-4 m-3" id="slot">
+
+                    </div>
+                    <div class="col-sm-4">
+
                     </div>
                 </div>
-                <!-- cover end -->
-
-                <!-- blog -->
-                <div class="mil-p-0-15 mil-relative" id="scroll">
-                    <div class="container">
-                        <div class="row mil-jcb">
-                            <div class="col-12 col-lg-8">
-                                <div class="mil-publication mil-up mil-mb-15 p-4 rounded" style="background-color: #1f2a3a; color: #fff;">
-
-                                    <!-- Vendor Name -->
-                                    <h4 class="mil-fs-36 mil-mb-15 mil-lh-120 mil-up">
-                                        <i class="far fa-user me-2 text-warning"></i>
-                                        <strong>Name:</strong>
-                                        <span id="vname" class="ms-2"></span>
-                                    </h4>
-
-                                    <!-- Vendor Email -->
-                                    <h4 class="mil-fs-36 mil-mb-15 mil-lh-120 mil-up">
-                                        <i class="far fa-envelope me-2 text-warning"></i>
-                                        <strong>Email:</strong>
-                                        <span id="vemail" class="ms-2"></span>
-                                    </h4>
-
-                                    <!-- Start Time -->
-                                    <h4 class="mil-fs-36 mil-mb-15 mil-lh-120 mil-up">
-                                        <i class="far fa-clock me-2 text-warning"></i>
-                                        <strong>Start Time:</strong>
-                                        <span id="vstart_time" class="ms-2"></span>
-                                    </h4>
-
-                                    <!-- End Time -->
-                                    <h4 class="mil-fs-36 mil-mb-15 mil-lh-120 mil-up">
-                                        <i class="far fa-clock me-2 text-warning"></i>
-                                        <strong>End Time:</strong>
-                                        <span id="vend_time" class="ms-2"></span>
-                                    </h4>
-
-                                    <!-- Contact -->
-                                    <h4 class="mil-fs-36 mil-mb-15 mil-lh-120 mil-up">
-                                        <i class="far fa-phone me-2 text-warning"></i>
-                                        <strong>Contact:</strong>
-                                        <span id="vcontact" class="ms-2"></span>
-                                    </h4>
-
-                                    <!-- Price -->
-                                    <a href="#" onclick="call()">
-                                        <blockquote class="mil-mb-30 mil-fs-24 mil-bg-a-2 mil-m-4 mil-lh-160 mil-up p-3 rounded" style="color: #000;">
-                                            <i class="far fa-dollar-sign me-2"></i>
-                                            <strong>Price:</strong>
-                                            <span id="vprice" class="ms-2"></span>
-                                            <span class="ms-1" style="color: #444;">/-&nbspBook Now</span>
-                                        </blockquote>
-                                    </a>
-
-                                    <!-- Description -->
-                                    <p class="mil-fs-18 mil-mb-30 mil-lh-160 mil-up">
-                                        <i class="far fa-align-left me-2 text-warning"></i>
-                                        <strong>Description:</strong>
-                                        <span id="vdesc" class="ms-2"></span>
-                                    </p>
-                                </div>
-                                <div class="mil-publication mil-mb-15">
-                                    <h2 class="mil-fs-36 mil-mb-60 mil-up">You may also like</h2>
-                                    <div class="row">
-                                        <div class="col-12 col-lg-6 mil-mb-15 mil-up">
-                                            <a href="publication-2.html" class="mil-blog-card mil-br-lg">
-                                                <div class="mil-cover">
-                                                    <img src="img/blog/7.jpg" alt="cover">
-                                                    <ul class="mil-category">
-                                                        <li class="mil-bg-m-1 mil-up-text mil-m-3 mil-mr-5">Office</li>
-                                                        <li class="mil-bg-a-2 mil-up-text mil-m-3 mil-mr-5">Dry Cleaning</li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mil-descr mil-bg-m-3">
-                                                    <p class="mil-up mil-mb-20"><span class="mil-date">08, 24, 2024</span> &nbsp; by &nbsp; <span class="mil-a-2">Emma Miller</span></p>
-                                                    <h5 class="mil-fs-28 mil-m-1 mil-up mil-mb-15 mil-lh-140">Keep your home and office clean effortlessly</h5>
-                                                    <p class="mil-lh-180 mil-mb-30 mil-up">Whether you work from home or in a traditional office setting, keeping your space clean is key to staying productive and comfortable. Clutter and dirt can affect your mood, reduce efficiency, and even lead to stress.</p>
-                                                    <div class="mil-up">
-                                                        <div class="mil-btn mil-sm mil-bg-m-2-light mil-br-xl mil-hover-bri-105 mil-hover-scale">Read more</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="col-12 col-lg-6 mil-mb-15 mil-up">
-                                            <a href="publication-2.html" class="mil-blog-card mil-br-lg">
-                                                <div class="mil-cover">
-                                                    <img src="img/blog/1.jpg" alt="cover">
-                                                    <ul class="mil-category">
-                                                        <li class="mil-bg-m-1 mil-up-text mil-m-3 mil-mr-5">Home</li>
-                                                        <li class="mil-bg-m-4 mil-up-text mil-m-1 mil-mr-5">Windows</li>
-                                                    </ul>
-                                                </div>
-                                                <div class="mil-descr mil-bg-m-3">
-                                                    <p class="mil-up mil-mb-20"><span class="mil-date">08, 24, 2024</span> &nbsp; by &nbsp; <span class="mil-a-2">Oscar Newman</span></p>
-                                                    <h5 class="mil-fs-28 mil-m-1 mil-up mil-mb-15 mil-lh-140">Natural Cleaning Products: Myths and Reality</h5>
-                                                    <p class="mil-lh-180 mil-mb-30 mil-up">The easiest way to prevent mess from piling up is by doing a little bit of cleaning every day. Instead of letting tasks accumulate until the weekend or when you have more time, take a few minutes each day to tidy up.</p>
-                                                    <div class="mil-up">
-                                                        <div class="mil-btn mil-sm mil-bg-m-2-light mil-br-xl mil-hover-bri-105 mil-hover-scale">Read more</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="mil-sidebar mil-mb-f">
-                                    <div class="mil-text-side mil-auto mil-mb-15 mil-up">
-                                        <div class="mil-box-bg">
-                                            <img src="img/ui/t5.jpg" alt="bg">
-                                        </div>
-                                        <div class="mil-text-frame mil-column mil-aic mil-w-100">
-                                            <div class="mil-aic mil-mb-20">
-                                                <p class="mil-tac">We clean objects of any <br>complexity and size in 6-9 hours</p>
-                                            </div>
-                                            <h2 class="mil-fs-52 mil-m-3 mil-lh-110 mil-mb-40 mil-tac">Want to learn more about our services?</h2>
-                                            <div class="mil-buttons-frame">
-                                                <a href="services.html" class="mil-btn mil-icon-btn mil-bg-a-1 mil-br-xl mil-hover-bri-105 mil-hover-scale">Our Services<i class="far fa-plus mil-bg-m-1 mil-a-1"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mil-sidebar-card mil-mb-15 mil-up">
-                                        <h4 class="mil-mb-40 mil-fs-24">Categories</h4>
-                                        <div class="mil-dots mil-mb-40"></div>
-                                        <ul class="mil-categories">
-                                            <li><a href="viewslots.html">Tips & Tricks</a></li>
-                                            <li><a href="viewslots.html">Home cleaning</a></li>
-                                            <li><a href="viewslots.html">Technologies</a></li>
-                                            <li><a href="viewslots.html">Detergents</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="mil-sidebar-card mil-mb-15 mil-up">
-                                        <h4 class="mil-fs-24 mil-mb-40">Popular</h4>
-                                        <div class="mil-dots mil-mb-40"></div>
-                                        <a href="publication-2.html" class="mil-blog-card mil-type-2 mil-br-lg mil-mb-15">
-                                            <div class="mil-cover">
-                                                <img src="img/blog/6.jpg" alt="cover">
-                                            </div>
-                                            <div class="mil-descr">
-                                                <h5 class="mil-fs-20 mil-m-1 mil-lh-140">Keep your home and office clean effortlessly</h5>
-                                            </div>
-                                        </a>
-                                        <a href="publication-2.html" class="mil-blog-card mil-type-2 mil-br-lg mil-mb-15">
-                                            <div class="mil-cover">
-                                                <img src="img/blog/2.jpg" alt="cover">
-                                            </div>
-                                            <div class="mil-descr">
-                                                <h5 class="mil-fs-20 mil-m-1 mil-lh-140">Secrets to Effective Cleaning: What Everyone Should Know</h5>
-                                            </div>
-                                        </a>
-                                        <a href="publication-2.html" class="mil-blog-card mil-type-2 mil-br-lg mil-mb-30">
-                                            <div class="mil-cover">
-                                                <img src="img/blog/8.jpg" alt="cover">
-                                            </div>
-                                            <div class="mil-descr">
-                                                <h5 class="mil-fs-20 mil-m-1 mil-lh-140">Natural Cleaning Products: Myths and Reality</h5>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="mil-sidebar-card mil-aic mil-mb-15 mil-jcb mil-bg-a-2 mil-up">
-                                        <h5 class="mil-fs-24 mil-md-fs-32 mil-m-4 mil-mb-30 mil-md-mb-30">Get in touch</h5>
-                                        <a href="contact.html" class="mil-link mil-m-4 mil-mb-30">Contact us<i class="far fa-arrow-right mil-bg-a-1 mil-m-1"></i></a>
-                                    </div>
-                                    <div class="mil-sidebar-card mil-mb-15 mil-up">
-                                        <h4 class="mil-mb-40 mil-fs-24">Subscribe our newsletter</h4>
-                                        <div class="mil-dots mil-mb-40"></div>
-                                        <form class="mil-subscribe mil-mb-30">
-                                            <input type="email" class="mil-bg-m-3 mil-light mil-br-xl" placeholder="Your email" id="subscribe-blog" name="subscribe">
-                                            <button type="submit" class="mil-bg-a-1"><i class="far fa-arrow-right"></i></button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- blog end -->
 
                 <!-- footer -->
                 <footer>

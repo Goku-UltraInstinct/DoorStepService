@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class UserController {
-   
+
     @GetMapping("/UserSignUp")
     public String go() {
         return "UserSignUp";
-    } 
-    
+    }
+
     @GetMapping("/UserLogin")
     public String go2() {
         return "UserLogin";
@@ -20,14 +20,24 @@ public class UserController {
     public String go3() {
         return "UserHome";
     }
-    
+
     @GetMapping("/ShowServices")
     public String go4() {
         return "ShowServices";
     }
-    
+
     @GetMapping("/ShowAvailableVendors")
     public String go5() {
         return "ShowAvailableVendors";
+    }
+
+    @GetMapping("/viewslot")
+    public String viewslot() {
+        return "viewslots";
+    }
+
+    @GetMapping("/payment")
+    public String payment() {
+        return "payment";
     }
 }
