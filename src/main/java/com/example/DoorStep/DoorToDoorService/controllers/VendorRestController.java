@@ -137,6 +137,7 @@ public class VendorRestController {
             ResultSet rs = DbLoader.executeSQL("select * from vendor where vemail='" + email + "' and vpass='" + pass + "'");
             if (rs.next()) {
                 session.setAttribute("vid", rs.getInt("vid"));
+                session.setAttribute("vemail", email);
                 return "success";
             } else {
                 return "failed";
@@ -239,6 +240,74 @@ public class VendorRestController {
             } else {
                 return "not_found";
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "exception";
+        }
+    }
+
+    @PostMapping("/showBookings")
+    public String showBookings(HttpSession session) {
+
+        try {
+            String vemail = (String) session.getAttribute("vemail");
+            String ans = new RDBMS_TO_JSON().generateJSON(
+                    "SELECT u.uname, u.uaddress, u.ucontact, u.uemail, "
+                    + "b.booking_id, b.date, b.vendor_email, b.total_price, b.payment_type, b.status "
+                    + "FROM booking b "
+                    + "JOIN user u ON b.uid = u.uid "
+                    + "WHERE b.vendor_email = '" + vemail + "'"
+            );
+            return ans;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "exception";
+        }
+    }
+    
+    @PostMapping("/approveBooking")
+    public String approveBooking(@RequestParam String bid) {
+        try {
+            String sql = "select * from booking where booking_id = " + bid + " ";
+            ResultSet rs = DbLoader.executeSQL(sql);
+            if (rs.next()) {
+                rs.updateString("status", "approved");
+                rs.updateRow();
+
+                return "success";
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "exception";
+        }
+        return null;
+    }
+
+    @PostMapping("/blockBooking")
+    public String blockBooking(@RequestParam String bid) {
+        try {
+            String sql = "select * from booking where booking_id = " + bid + " ";
+            ResultSet rs = DbLoader.executeSQL(sql);
+            if (rs.next()) {
+                rs.updateString("status", "blocked");
+                rs.updateRow();
+
+                return "success";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "exception";
+        }
+        return null;
+    }
+    
+    @PostMapping("/showSlots")
+    public String showSlots(@RequestParam String bid, HttpSession session) {
+
+        try {
+            String ans = new RDBMS_TO_JSON().generateJSON("select * from booking_detail where booking_id = '" + bid + "'");
+            return ans;
         } catch (Exception ex) {
             ex.printStackTrace();
             return "exception";

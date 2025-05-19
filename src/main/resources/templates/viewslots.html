@@ -31,10 +31,6 @@
             const params = new URLSearchParams(window.location.search);
             const email = params.get('email');
             function go() {
-
-
-
-
                 var s = document.getElementById("datepicker").value;
                 console.log(s);
 
@@ -108,7 +104,6 @@
                 output += '<td> total value </td>';
                 output += '<td>' + total + '</td>';
                 output += '</tr>';
-
                 output += '</table>';
                 output += '<input type="button" class="btn btn-primary form-control mt-2" value="click on the button to pay the value" onclick="pay()"/>';
                 document.getElementById("slot").innerHTML = output;
@@ -396,26 +391,47 @@
                 </div>
                 <!-- hero end -->
 
-                <div class="text-center alert alert-success" style="margin-top: 70px">
-                    <h3>Date: <input type="date" id="datepicker" class="alet alert-warning" onchange="go()"></h3>
+                <!-- slot booking start -->
+                <div class="container mil-mb-60">
+                    <div class="row">
+                        <div class="col-4">
+                        </div>
+                        <div class="col-1">
+                            <h3>Date: 
+                            </h3>
+                        </div>
+                        <div class="col-3">
+                            <div class="text-center alert alert-success mt-5">
+                                <h3>
+                                    <input 
+                                        type="date" 
+                                        id="datepicker" 
+                                        class="alert alert-warning d-inline-block ms-2" 
+                                        onchange="go()" 
+                                        style="vertical-align: middle;">
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="col-4"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 m-3" id="table">
+                            <!-- Table content here -->
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4 m-3" id="slot">
+                            <!-- Slot content here -->
+                        </div>
+                        <div class="col-sm-4"></div>
+                    </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-12 m-3  " id="table" >
+                <!-- slot booking end -->
 
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-
-                    </div>
-                    <div class="col-sm-4 m-3" id="slot">
-
-                    </div>
-                    <div class="col-sm-4">
-
-                    </div>
-                </div>
 
                 <!-- footer -->
                 <footer>

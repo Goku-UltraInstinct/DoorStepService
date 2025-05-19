@@ -40,5 +40,10 @@ public class VendorController {
     public String go7(){
     return "UserShowServiceProvidersDetail";
     }
+
+    @GetMapping("/VendorManageBookings")
+    public String go8(){
+    return "VendorManageBookings";
+    }
 }
 
