@@ -120,11 +120,23 @@
                 var url = "ShowServices?cid=" + cid;
                 window.location.href = url;
             }
+            
+            function sendmail()
+            {
+                    var url="/sendemail";
+                fetch(url)
+                        .then(response => response.text())
+                        .then(ans => renderAsHtml5(ans));
+            }
+            function renderAsHtml5(ans)
+            {
+                alert(ans);
+            }
 
         </script>
     </head>
 
-    <body onload="getCities()">
+    <body onload="getCities(),sendmail()">
 
         <!-- page wrapper -->
         <div class="mil-page-wrapper">

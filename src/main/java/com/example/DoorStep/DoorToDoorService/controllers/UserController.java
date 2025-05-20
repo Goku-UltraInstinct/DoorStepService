@@ -1,5 +1,6 @@
 package com.example.DoorStep.DoorToDoorService.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -16,7 +17,7 @@ public class UserController {
         return "UserLogin";
     }
 
-    @GetMapping("/UserHome")
+    @GetMapping("/")
     public String go3() {
         return "UserHome";
     }
@@ -27,8 +28,17 @@ public class UserController {
     }
 
     @GetMapping("/ShowAvailableVendors")
-    public String go5() {
-        return "ShowAvailableVendors";
+    public String go5(HttpSession session) {
+        Integer uid=(Integer) session.getAttribute("uid");
+        if(uid == null)
+        {
+            return "redirect:/UserLogin";
+        }
+        else
+        {
+            return "ShowAvailableVendors";
+        }
+//        return "ShowAvailableVendors";
     }
 
     @GetMapping("/viewslot")
@@ -45,4 +55,19 @@ public class UserController {
     public String go6() {
         return "UserShowBookingHistory";
     }
+    
+    @GetMapping("/UserChangePassword")
+    public String go7() {
+        return "UserChangePassword";
+    }
+    
+    
+    @GetMapping("/logout")
+    public String logout(HttpSession session)
+    {
+        session.invalidate();
+        return "redirect:/";
+    }
+    
+    
 }

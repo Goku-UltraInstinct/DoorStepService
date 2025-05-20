@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.util.StringTokenizer;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class UserRestController {
 
+    @Autowired
+    public EmailSenderService email;
+
+    
     @PostMapping("/signUp")
     public String userDetails(@RequestParam String uname,
             @RequestParam String uemail,
@@ -254,4 +259,10 @@ public class UserRestController {
         }
     }
 
+    @GetMapping("/sendemail")
+    public String sendemail()
+    {
+        this.email.sendSimpleEmail("hiteshkumar00248@gmail.com", "Hello Everyone this is email testing mode", "Email Testing");
+        return "success";
+ }
 }
