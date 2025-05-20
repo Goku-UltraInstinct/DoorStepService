@@ -29,45 +29,59 @@ public class UserController {
 
     @GetMapping("/ShowAvailableVendors")
     public String go5(HttpSession session) {
-        Integer uid=(Integer) session.getAttribute("uid");
-        if(uid == null)
-        {
+        Integer uid = (Integer) session.getAttribute("uid");
+        if (uid == null) {
             return "redirect:/UserLogin";
-        }
-        else
-        {
+        } else {
             return "ShowAvailableVendors";
         }
 //        return "ShowAvailableVendors";
     }
 
     @GetMapping("/viewslot")
-    public String viewslot() {
-        return "viewslots";
+    public String viewslot(HttpSession session) {
+        Integer uid = (Integer) session.getAttribute("uid");
+        if (uid == null) {
+            return "redirect:/UserLogin";
+        } else {
+            return "viewslots";
+        }
     }
 
     @GetMapping("/payment")
-    public String payment() {
-        return "payment";
+    public String payment(HttpSession session) {
+        Integer uid = (Integer) session.getAttribute("uid");
+        if (uid == null) {
+            return "redirect:/UserLogin";
+        } else {
+            return "payment";
+        }
     }
-    
+
     @GetMapping("/UserShowBookingHistory")
-    public String go6() {
-        return "UserShowBookingHistory";
+    public String go6(HttpSession session) {
+        Integer uid = (Integer) session.getAttribute("uid");
+        if (uid == null) {
+            return "redirect:/UserLogin";
+        } else {
+            return "UserShowBookingHistory";
+        }
     }
-    
+
     @GetMapping("/UserChangePassword")
-    public String go7() {
-        return "UserChangePassword";
+    public String go7(HttpSession session) {
+        Integer uid = (Integer) session.getAttribute("uid");
+        if (uid == null) {
+            return "redirect:/UserLogin";
+        } else {
+            return "UserChangePassword";
+        }
     }
-    
-    
-    @GetMapping("/logout")
-    public String logout(HttpSession session)
-    {
+
+    @GetMapping("/Userlogout")
+    public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
     }
-    
-    
+
 }
