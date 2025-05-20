@@ -139,7 +139,7 @@ public class UserRestController {
     }
 
     @GetMapping("/view_slots")
-    String view_slots(@RequestParam String email, @RequestParam String date) {
+    public String view_slots(@RequestParam String email, @RequestParam String date) {
 
         System.out.println(date);
         System.out.println(email);
@@ -238,6 +238,19 @@ public class UserRestController {
             return ans;
         } catch (Exception ex) {
             return ex.toString();
+        }
+    }
+    
+    @PostMapping("/showBookingHistory")
+    public String showBookingHistory(HttpSession session) {
+
+        try {
+            Integer uid = (Integer) session.getAttribute("uid");
+            String ans = new RDBMS_TO_JSON().generateJSON("select * from booking where uid = '" + uid + "'");
+            return ans;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "exception";
         }
     }
 

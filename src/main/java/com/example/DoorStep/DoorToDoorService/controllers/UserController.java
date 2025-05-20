@@ -40,4 +40,9 @@ public class UserController {
     public String payment() {
         return "payment";
     }
+    
+    @GetMapping("/UserShowBookingHistory")
+    public String go6() {
+        return "UserShowBookingHistory";
+    }
 }
