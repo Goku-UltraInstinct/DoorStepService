@@ -1,6 +1,5 @@
 package com.example.DoorStep.DoorToDoorService.controllers;
 
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -23,53 +22,28 @@ public class VendorController {
     }
 
     @GetMapping("/AdminManageServiceProviders")
-    public String go2(HttpSession session) {
-        Integer vid = (Integer) session.getAttribute("vid");
-        if (vid == null) {
-            return "redirect:/VendorLogin";
-        } else {
-            return "AdminManageServiceProviders";
-        }
+    public String go2() {
+        return "AdminManageServiceProviders";
     }
 
     @GetMapping("/VendorManagePhotos")
-    public String go5(HttpSession session) {
-        Integer vid = (Integer) session.getAttribute("vid");
-        if (vid == null) {
-            return "redirect:/VendorLogin";
-        } else {
-            return "VendorManagePhotos";
-        }
+    public String go5() {
+        return "VendorManagePhotos";
     }
 
     @GetMapping("/EditDetail")
-    public String go6(HttpSession session) {
-        Integer vid = (Integer) session.getAttribute("vid");
-        if (vid == null) {
-            return "redirect:/VendorLogin";
-        } else {
-            return "EditDetail";
-        }
+    public String go6() {
+        return "EditDetail";
     }
 
     @GetMapping("/UserShowServiceProvidersDetail")
-    public String go7(HttpSession session) {
-        Integer vid = (Integer) session.getAttribute("vid");
-        if (vid == null) {
-            return "redirect:/VendorLogin";
-        } else {
-            return "UserShowServiceProvidersDetail";
-        }
+    public String go7() {
+        return "UserShowServiceProvidersDetail";
     }
 
     @GetMapping("/VendorManageBookings")
-    public String go8(HttpSession session) {
-        Integer vid = (Integer) session.getAttribute("vid");
-        if (vid == null) {
-            return "redirect:/VendorLogin";
-        } else {
-            return "VendorManageBookings";
-        }
+    public String go8() {
+        return "VendorManageBookings";
     }
 
 //    @GetMapping("/Vendorlogout")
