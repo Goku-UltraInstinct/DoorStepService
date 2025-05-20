@@ -21,7 +21,6 @@ public class UserRestController {
     @Autowired
     public EmailSenderService email;
 
-    
     @PostMapping("/signUp")
     public String userDetails(@RequestParam String uname,
             @RequestParam String uemail,
@@ -68,6 +67,7 @@ public class UserRestController {
             ResultSet rs = DbLoader.executeSQL("select * from user where uemail='" + email + "' and upass='" + pass + "'");
             if (rs.next()) {
                 session.setAttribute("uid", rs.getInt("uid"));
+                session.setAttribute("uemail",email );
                 return "success";
             } else {
                 return "failed";
@@ -245,7 +245,7 @@ public class UserRestController {
             return ex.toString();
         }
     }
-    
+
     @PostMapping("/showBookingHistory")
     public String showBookingHistory(HttpSession session) {
 
@@ -260,9 +260,56 @@ public class UserRestController {
     }
 
     @GetMapping("/sendemail")
-    public String sendemail()
-    {
+    public String sendemail() {
         this.email.sendSimpleEmail("hiteshkumar00248@gmail.com", "Hello Everyone this is email testing mode", "Email Testing");
         return "success";
- }
+    }
+    
+    @PostMapping("/UserChangePassword")
+    public String changePassword(@RequestParam String oldpass,
+            @RequestParam String newpass,
+            @RequestParam String confirmpass,
+            HttpSession session) {
+        try {
+            String uemail = (String) session.getAttribute("uemail");
+            if (uemail == null) {
+                return "nosession";
+            }
+
+            ResultSet rs = DbLoader.executeSQL("select * from user where uemail='" + uemail + "' and upass='" + oldpass + "'");
+            if (rs.next()) {
+                if (oldpass.equals(newpass)) {
+                    return "sameold";
+                }
+                if (!newpass.equals(confirmpass)) {
+                    return "mismatch";
+                }
+
+                rs.updateString("upass", newpass);
+                rs.updateRow();  // ✅ important step
+                return "success";
+            } else {
+                return "wrongold";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "exception";
+        }
+    }
+    
+    @PostMapping("/DirectToChangePassword")
+    public String changePassword(@RequestParam String email, @RequestParam String pass, HttpSession session) {
+        try {
+            ResultSet rs = DbLoader.executeSQL("select * from user where uemail='" + email + "' and upass='" + pass + "'");
+            if (rs.next()) {
+                return "success";
+            } else {
+                return "failed";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "exception";
+        }
+    }
+
 }
