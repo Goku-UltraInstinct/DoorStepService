@@ -25,6 +25,9 @@
         <link rel="stylesheet" href="css/style.css">
         <!-- page title -->
         <title>Cleandy</title>
+        
+        
+        
         <style>
             .mil-publication i {
                 color: #EDCE29;
@@ -83,11 +86,13 @@
                 console.log(vid);
 
             }
+            var vendor_email = "";
             function renderHTML(ans) {
                 console.log(ans);
                 var mainobj = JSON.parse(ans);
                 var arr = mainobj["ans"];
                 var imgPath = "myUploads/" + arr[0].vphoto;
+                vendor_email = arr[0].vemail;
 
                 document.getElementById("vphoto").innerHTML =
                         `<img src="${imgPath}" class="img-fluid" style="height: 300px; object-fit: cover;" alt="Image">`;
@@ -102,13 +107,86 @@
 
             }
 
-
-
-
             function call()
             {
                 window.location.href = "/viewslot?email=" + email;
             }
+            
+            var xhr = new XMLHttpRequest();
+            function review()
+            {
+                $("#myModal1").modal("show");
+            }
+
+            var n = 0;
+            function fill(obj)
+            {
+                var img = obj.src;
+                var id = obj.id;
+                var val = parseInt(id.substring(id.indexOf("_") + 1));
+                var i;
+                if (n === 0)
+                {
+                    i = 1;
+                } else
+                {
+                    i = n + 1;
+                }
+                for (; i <= 5; i++)
+                {
+                    if (i <= val)
+                    {
+                        document.getElementById("rating_" + i).src = "rating/filled_star.png";
+
+                    } else
+                    {
+                        document.getElementById("rating_" + i).src = "rating/empty_star.png";
+                    }
+                }
+
+            }
+            function selected(obj)
+            {
+                var id = obj.id;
+                var val = parseInt(id.substring(id.indexOf("_") + 1));
+                n = val;
+            }
+            function unfill(obj)
+            {
+                var i;
+                if (n === 0)
+                {
+                    i = 1;
+                } else
+                {
+                    i = n + 1;
+                }
+                for (; i <= 5; i++)
+                {
+                    document.getElementById("rating_" + i).src = "rating/empty_star.png";
+                }
+            }
+            
+            
+            
+            function addreview()
+            {
+
+                var comment = document.getElementById("comment").value;
+                
+
+                var url = "./userAddReview?vendor_email=" + vendor_email + "&rating=" + n + "&comment=" + comment;
+
+                fetch(url).then(response => response.text())
+                        .then(ans => renderAddReviewResponse(ans));
+
+
+            }
+
+            function renderAddReviewResponse(ans) {
+                alert(ans);
+            }
+
 
         </script>
     </head>
@@ -493,6 +571,59 @@
                                         </div>
                                     </div>
                                 </div>
+                                
+                                
+                                 <div class="modal" id="myModal1" >
+                                    <div class="modal-dialog">
+
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                            
+                                            <div class="modal-body " >
+                                                <div>
+
+
+
+                                                    <div id="all">
+
+                                                        <form action="" method="post" id="form1">
+                                                            <table>
+                                                                <tr> <label class="form-group"> Give Ratings..</label>
+                                                                <td>
+                                                                    <img id="rating_1" src="rating/empty_star.png" onmouseover="fill(this);" onmouseout="unfill(this);" onclick="selected(this);" width="50px;" height="50px;">
+                                                                </td>
+                                                                <td>
+                                                                    <img id="rating_2" src="rating/empty_star.png" onmouseover="fill(this)" onmouseout="unfill(this)" onclick="selected(this)" width="50px;" height="50px;">
+                                                                </td>
+                                                                <td>
+                                                                    <img id="rating_3" src="rating/empty_star.png" onmouseover="fill(this)" onmouseout="unfill(this)" onclick="selected(this)" width="50px;" height="50px;">
+                                                                </td>
+                                                                <td>
+                                                                    <img id="rating_4" src="rating/empty_star.png" onmouseover="fill(this)" onmouseout="unfill(this)" onclick="selected(this)" width="50px;" height="50px;">
+                                                                </td>
+                                                                <td>
+                                                                    <img  id="rating_5" src="rating/empty_star.png" onmouseover="fill(this)" onmouseout="unfill(this)" onclick="selected(this)" width="50px;" height="50px;">
+                                                                </td>
+                                                                </tr>
+                                                            </table>
+                                                            <br>
+                                                            <label> Write Comment : </label> <input style="border-radius: 20px;" type="text" id="comment"  class="form-group"/>
+                                                            <input type="button" value="Submit" class="btn btn-primary"
+                                                                   style="border-radius: 10px;text-shadow: 2px 2px 5px black" onclick="addreview()" />
+                                                            <label style="display: none;color: tomato;" id="label1">Please Select Any Rating</label>
+
+                                                        </form>
+                                                    </div>
+
+                                                </div>   
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                                
+                                
                             </div>
                             <div class="col-12 col-lg-4">
                                 <div class="mil-sidebar mil-mb-f">
@@ -681,6 +812,13 @@
 
         </div>
         <!-- page wrapper end -->
+        
+        
+        
+                <!-- JAVASCRIPT  FILES ========================================= --> 
+        <script  src="js/jquery-3.6.0.min.js"></script><!-- JQUERY.MIN JS -->
+        <script  src="js/popper.min.js"></script><!-- POPPER.MIN JS -->
+        <script  src="js/bootstrap.min.js"></script><!-- BOOTSTRAP.MIN JS -->
 
         <!-- swup js -->
         <script src="js/plugins/swup.min.js"></script>
