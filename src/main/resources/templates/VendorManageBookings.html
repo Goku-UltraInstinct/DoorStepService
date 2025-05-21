@@ -220,22 +220,44 @@
             function renderAfterApprove(ans) {
                 console.log(ans);
                 if (ans.trim() === "success") {
-                    alert("Booking approved successfully!");
-                    fetchVendors();  // reload vendors list
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Booking Approved',
+                        text: 'Booking approved successfully!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetchVendors();  // reload vendors list
+                        }
+                    });
                 } else {
-                    alert("Something went wrong: " + ans);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong: ' + ans
+                    });
                 }
             }
-
             function renderAfterBlock(ans) {
                 console.log(ans);
                 if (ans.trim() === "success") {
-                    alert("Booking blocked successfully!");
-                    fetchVendors();  // reload vendors list
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Booking Blocked',
+                        text: 'Booking blocked successfully!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetchVendors();  // reload vendors list
+                        }
+                    });
                 } else {
-                    alert("Something went wrong: " + ans);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong: ' + ans
+                    });
                 }
             }
+            
             function fetchVendors() {
                 fetch("/showBookings", {
                     method: "POST"
