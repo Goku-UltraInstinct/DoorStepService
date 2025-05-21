@@ -26,7 +26,7 @@
         <!-- page title -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <title>Cleandy</title>
-
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <style>
             .card-link {
                 text-decoration: none;
@@ -75,10 +75,8 @@
                 border-color: #007bff;
                 cursor: pointer;
             }
-
-
-
         </style>
+
         <script>
             function getCid()
             {
@@ -92,37 +90,50 @@
                     body: formdata
                 })
                         .then(response => response.text())
-                        .then(ans => renderHTML(ans));  // separate function
+                        .then(ans => renderHTML(ans))  // separate function
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Fetch Failed',
+                                text: 'Could not load services. Please try again.'
+                            });
+                        });
 
                 console.log(cid);
-
             }
 
             function renderHTML(ans) {
-//                alert(ans);
-                var mainobj = JSON.parse(ans);
-                var arr = mainobj["ans"];
-                var s = '<div class="container"><div class="row">';
+                try {
+                    var mainobj = JSON.parse(ans);
+                    var arr = mainobj["ans"];
+                    var s = '<div class="container"><div class="row">';
 
-                for (var i = 0; i < arr.length; i++) {
-                    var st = arr[i];
-                    var imgPath = "myUploads/" + st.sphoto;
-                    var sid = st.sid;
-                    var sn = st.sname;
+                    for (var i = 0; i < arr.length; i++) {
+                        var st = arr[i];
+                        var imgPath = "myUploads/" + st.sphoto;
+                        var sid = st.sid;
+                        var sn = st.sname;
 
-                    s += `
-                    <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                        <div class="card clickable-card shadow-sm h-100" style="cursor: pointer;" onclick="goToVendors('${sid}')">
-                            <img src="${imgPath}" class="img-fluid rounded-top" style="height: 200px; object-fit: cover;" alt="Image">
-                            <div class="card-body text-center d-flex flex-column justify-content-between">
-                                <div class="btn btn-primary city-name-btn">${sn}</div>
-                            </div>
+                        s += `
+                <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                    <div class="card clickable-card shadow-sm h-100" style="cursor: pointer;" onclick="goToVendors('${sid}')">
+                        <img src="${imgPath}" class="img-fluid rounded-top" style="height: 200px; object-fit: cover;" alt="Image">
+                        <div class="card-body text-center d-flex flex-column justify-content-between">
+                            <div class="btn btn-primary city-name-btn">${sn}</div>
                         </div>
                     </div>
-                    `;
+                </div>`;
+                    }
+
+                    s += '</div></div>';
+                    document.getElementById("d1").innerHTML = s;
+                } catch (e) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Data Error',
+                        text: 'Failed to parse service data. Please try again later.'
+                    });
                 }
-                s += '</div></div>';
-                document.getElementById("d1").innerHTML = s;
             }
 
             function goToVendors(sid) {

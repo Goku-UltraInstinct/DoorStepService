@@ -26,6 +26,7 @@
         <!-- page title -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <title>Cleandy</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <style>
             .card-link {
@@ -120,18 +121,23 @@
                 var url = "ShowServices?cid=" + cid;
                 window.location.href = url;
             }
-            
+
             function sendmail()
             {
-                    var url="/sendemail";
+                var url = "/sendemail";
                 fetch(url)
                         .then(response => response.text())
                         .then(ans => renderAsHtml5(ans));
             }
             function renderAsHtml5(ans)
             {
-                alert(ans);
-            }
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Email Sent',
+                    text: ans,
+                    confirmButtonText: 'OK'
+                });
+                        }
 
         </script>
     </head>
@@ -143,7 +149,7 @@
 
             <!-- static content -->
             <div th:replace="UserHeader :: header">
-                
+
             </div>
 
 

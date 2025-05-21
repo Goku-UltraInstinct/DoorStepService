@@ -25,7 +25,7 @@
         <link rel="stylesheet" href="css/style.css">
         <!-- page title -->
         <title>Cleandy</title>
-
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script>
             const params = new URLSearchParams(window.location.search);
@@ -36,7 +36,12 @@
 
                 if (s === '')
                 {
-                    alert("Choose Dates first");
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Date Selected',
+                        text: 'Please choose a date first.',
+                        confirmButtonText: 'OK'
+                    });
                 } else {
 
                     var url = "./view_slots?email=" + email + "&date=" + s;

@@ -25,10 +25,10 @@
         <link rel="stylesheet" href="css/style.css">
         <!-- page title -->
         <title>Cleandy</title>
-        
+
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        
-        
+
+
         <style>
             span.text-yellow:hover {
                 color: black !important;
@@ -42,6 +42,16 @@
                 var email = document.getElementById("uemail").value;
                 var password = document.getElementById("upass").value;
 
+                if (!email || !password) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Fields',
+                        text: 'Please fill in both email and password.',
+                        confirmButtonText: 'OK'
+                    });
+                    return; // stop further execution
+                }
+
                 var formdata = new FormData();
                 formdata.append("email", email);
                 formdata.append("pass", password);
@@ -52,21 +62,41 @@
 
             }
 
-            function renderHTML(ans)
-            {
+            function renderHTML(ans) {
                 console.log(ans);
-                if (ans.trim().toLowerCase() === "success")
-                {
-                    alert("Success!!!");
-                    window.location.href = "/";
-                } else
-                {
-                    alert("failed");
-                 }
+                if (ans.trim().toLowerCase() === "success") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Login Successful',
+                        text: 'You are now logged in.',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "/";
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Login Failed',
+                        text: 'Invalid credentials. Please try again.',
+                        confirmButtonText: 'OK'
+                    });
+                }
             }
             function changePassword() {
                 var email = document.getElementById("uemail").value;
                 var password = document.getElementById("upass").value;
+
+                if (!email || !password) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Fields',
+                        text: 'Please fill in both email and password.',
+                        confirmButtonText: 'OK'
+                    });
+                    return; // stop further execution
+                }
 
                 var formdata = new FormData();
                 formdata.append("email", email);
@@ -78,21 +108,31 @@
 
             }
 
-            function renderHTML2(ans)
-            {
+            function renderHTML2(ans) {
                 console.log(ans);
-                if (ans.trim().toLowerCase() === "success")
-                {
-                    alert("Success!!!");
-                    window.location.href = "/UserChangePassword";
-                } else
-                {
-                    alert("Enter Right Credentials!!!");
-                 }
+                if (ans.trim().toLowerCase() === "success") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Login Verified',
+                        text: 'Redirecting to change password page.',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "/UserChangePassword";
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Incorrect Credentials',
+                        text: 'Please enter valid email and password.',
+                        confirmButtonText: 'OK'
+                    });
+                }
             }
-            
-            
-            
+
+
+
             function forgot()
             {
                 var email8 = document.getElementById("uemail").value;
@@ -123,10 +163,6 @@
                         showConfirmButton: false
                     });
 
-
-                    
-
-
                 } else if (ans === "fail") {
                     Swal.fire({
                         icon: 'warning',
@@ -134,45 +170,50 @@
                         text: 'Email not registered for User'
                     });
                 } else {
-                    alert(ans);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: ans,
+                        confirmButtonText: 'OK'
+                    });
                 }
             }
 
             function verifyOtpFromModal() {
-                        var inp = document.getElementById("otpInput").value;
-                        if (otp == inp)
-                        {
-                            var email = document.getElementById("uemail").value;
-                            var url = "/otpverify?email=" + email;
-                            fetch(url)
-                                    .then(response => response.text())
-                                    .then(ans => {
-                                        if (ans === "success")
-                                        {
-                                            Swal.fire({
-                                                icon: 'success',
-                                                title: 'Otp Success',
-                                                text: 'Please Check Your Email for the Password'
-                                            });
-
-                                        } else if (ans === "fail")
-                                        {
-                                            Swal.fire({
-                                                icon: 'error',
-                                                title: 'Otp Invalid',
-                                                text: 'Please Check Your Email for the OTP'
-                                            });
-                                        }
+                var inp = document.getElementById("otpInput").value;
+                if (otp == inp)
+                {
+                    var email = document.getElementById("uemail").value;
+                    var url = "/otpverify?email=" + email;
+                    fetch(url)
+                            .then(response => response.text())
+                            .then(ans => {
+                                if (ans === "success")
+                                {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Otp Success',
+                                        text: 'Please Check Your Email for the Password'
                                     });
-                        } else {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Invalid Otp',
-                                text: 'Please Enter Valid Otp'
-                            });
-                        }
 
-                    }
+                                } else if (ans === "fail")
+                                {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Otp Invalid',
+                                        text: 'Please Check Your Email for the OTP'
+                                    });
+                                }
+                            });
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Invalid Otp',
+                        text: 'Please Enter Valid Otp'
+                    });
+                }
+
+            }
         </script>
 
     </head>
