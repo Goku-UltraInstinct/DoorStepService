@@ -80,7 +80,7 @@ public class UserController {
 
     @GetMapping("/Userlogout")
     public String logout(HttpSession session) {
-        session.invalidate();
+        session.removeAttribute("uid");
         return "redirect:/";
     }
 
