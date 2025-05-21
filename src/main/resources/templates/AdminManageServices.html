@@ -25,6 +25,7 @@
         <link rel="stylesheet" href="css/style.css">
         <!-- page title -->
         <title>Cleandy</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <style>
             #service-container {
                 display: flex;
@@ -93,10 +94,21 @@
                 var servicename = document.getElementById("service-name").value;
                 var servicephoto = document.getElementById("service-photo").files[0];
                 var servicedesc = document.getElementById("service-desc").value;
+
+                // Validation
+                if (!servicename || !servicephoto || !servicedesc) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Fields',
+                        text: 'Please fill all the fields.'
+                    });
+                    return;
+                }
+
                 var formdata = new FormData();
-                formdata.append("sname", servicename); // Changed to "sname"
-                formdata.append("sphoto", servicephoto); // Changed to "sphoto"
-                formdata.append("sdesc", servicedesc); // Changed to "sdesc"
+                formdata.append("sname", servicename);
+                formdata.append("sphoto", servicephoto);
+                formdata.append("sdesc", servicedesc);
 
                 fetch("/AdminManageServices", {
                     method: "POST",
@@ -105,26 +117,24 @@
                         .then(response => response.text())
                         .then(ans => {
                             if (ans.trim() === "success") {
-                                showToast("Service Added Successfully");
-                                getServices();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Service Added',
+                                    text: 'Service added successfully.'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        getServices(); // Refresh after user confirms
+                                    }
+                                });
                             } else {
-                                showToast("Error: " + ans);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Something went wrong: ' + ans
+                                });
                             }
                         });
             }
-
-            function renderHTML(ans) {
-                console.log(ans);
-                if (ans === "success") {
-                    alert("Service added successfully!");
-                } else if (ans === "exists") {
-                    alert("Service already exists.");
-                } else {
-                    alert("Something went wrong: " + ans);
-                }
-            }
-
-
 
             function getServices() {
                 fetch("/AdminShowServices", {method: "POST"})
@@ -140,10 +150,10 @@
                                 card.className = "service-card";
 
                                 card.innerHTML = `
-                    <img src="myUploads/${service.sphoto}" alt="Service Photo" style="width: 100%; height: 200px; object-fit: cover;">
-                    <h3>${service.sname}</h3>
-                    <button onclick="deleteService('${service.sname}')">Delete</button>
-                `;
+                        <img src="myUploads/${service.sphoto}" alt="Service Photo" style="width: 100%; height: 200px; object-fit: cover;">
+                        <h3>${service.sname}</h3>
+                        <button onclick="deleteService('${service.sname}')">Delete</button>
+                    `;
 
                                 container.appendChild(card);
                             }
@@ -152,34 +162,32 @@
 
             function deleteService(servicename) {
                 let formdata = new FormData();
-                formdata.append("sname", servicename);  // Changed to "sname"
+                formdata.append("sname", servicename);
 
                 fetch("/AdminDeleteService", {method: "POST", body: formdata})
                         .then(response => response.text())
                         .then(ans => {
                             if (ans === "success") {
-                                alert("Service deleted");
-                                getServices(); // Refresh after deletion
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted',
+                                    text: 'Service deleted successfully.'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        getServices(); // Refresh after confirmation
+                                    }
+                                });
                             } else {
-                                alert("Delete failed: " + ans);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Delete Failed',
+                                    text: 'Could not delete service: ' + ans
+                                });
                             }
                         });
             }
-            function showToast(message) {
-                var toast = document.getElementById("toast");
-                toast.innerText = message;
-                toast.style.display = "block";
-                toast.style.opacity = 1;
-
-                setTimeout(() => {
-                    toast.style.opacity = 0;
-                    setTimeout(() => {
-                        toast.style.display = "none";
-                    }, 500); // wait for fade-out transition to complete
-                }, 1500); // display for 1.5 seconds
-            }
-           
         </script>
+
 
     </head>
 

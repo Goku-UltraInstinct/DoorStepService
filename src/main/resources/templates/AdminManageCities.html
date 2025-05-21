@@ -25,6 +25,7 @@
         <link rel="stylesheet" href="css/style.css">
         <!-- page title -->
         <title>Cleandy</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <style>
             #city-container {
                 display: flex;
@@ -94,6 +95,15 @@
                 var cityphoto = document.getElementById("city-photo").files[0];
                 var citydesc = document.getElementById("city-desc").value;
 
+                // Validation
+                if (!cityname || !cityphoto || !citydesc) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Fields',
+                        text: 'Please fill all the fields.'
+                    });
+                    return;
+                }
                 var formdata = new FormData();
                 formdata.append("cn", cityname);
                 formdata.append("cp", cityphoto);
@@ -105,22 +115,32 @@
                 })
                         .then(response => response.text())
                         .then(ans => {
-                            if (ans.trim() === "success") {
-                                showToast("Added Successfully"); // 👈 Toast here
-                                getCities();
-                            } else {
-                                showToast("Error: " + ans);
-                            }
+                            renderHTML(ans.trim()); // Delegate to centralized handler
                         });
             }
             function renderHTML(ans) {
-                console.log(ans);
                 if (ans === "success") {
-                    alert("City added successfully!");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'City Added',
+                        text: 'The city was added successfully.'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            getCities(); // Refresh only after user confirms
+                        }
+                    });
                 } else if (ans === "exists") {
-                    alert("City already exists.");
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Already Exists',
+                        text: 'City already exists.'
+                    });
                 } else {
-                    alert("Something went wrong: " + ans);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong: ' + ans
+                    });
                 }
             }
 
@@ -158,27 +178,25 @@
                         .then(response => response.text())
                         .then(ans => {
                             if (ans === "success") {
-                                alert("City deleted");
-                                getCities(); // 🟢 refresh after deletion
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted',
+                                    text: 'City deleted successfully.'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        getCities(); // Refresh after confirmation
+                                    }
+                                });
                             } else {
-                                alert("Delete failed: " + ans);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Delete Failed',
+                                    text: 'Could not delete city: ' + ans
+                                });
                             }
                         });
             }
 
-            function showToast(message) {
-                var toast = document.getElementById("toast");
-                toast.innerText = message;
-                toast.style.display = "block";
-                toast.style.opacity = 1;
-
-                setTimeout(() => {
-                    toast.style.opacity = 0;
-                    setTimeout(() => {
-                        toast.style.display = "none";
-                    }, 500); // wait for fade-out transition to complete
-                }, 1500); // display for 1.5 seconds
-            }
         </script>
 
     </head>

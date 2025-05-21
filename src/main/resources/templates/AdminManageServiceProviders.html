@@ -28,6 +28,7 @@
         <link rel="stylesheet" href="css/style.css">
         <!-- page title -->
         <title>Cleandy</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <style>
             .mil-table-wrapper {
                 overflow-x: auto;
@@ -85,34 +86,34 @@
 
                 // Header row
                 s += `<div class="row font-weight-bold mb-3" 
-               style="background-color:#f7f9fc; padding:15px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-                        <div class="col-1">Name</div>
-                        <div class="col-2">Email</div>
-                        <div class="col-1">City</div>
-                        <div class="col-1">Service</div>
-                        <div class="col-2">Subservice</div>
-                        <div class="col-1">Price</div>
-                        <div class="col-2">Contact</div>
-                        <div class="col-1">Status</div>
-                        <div class="col-1">Action</div>
-                </div>`;
+                    style="background-color:#f7f9fc; padding:15px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                            <div class="col-1">Name</div>
+                            <div class="col-2">Email</div>
+                            <div class="col-1">City</div>
+                            <div class="col-1">Service</div>
+                            <div class="col-2">Subservice</div>
+                            <div class="col-1">Price</div>
+                            <div class="col-2">Contact</div>
+                            <div class="col-1">Status</div>
+                            <div class="col-1">Action</div>
+                    </div>`;
 
                 for (var i = 0; i < arr.length; i++) {
                     var obj = arr[i];
                     console.log(obj.status);
                     s += `
-        <div class="row align-items-center mb-3 p-3" 
-             style="background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.05); transition:0.3s;">
+                    <div class="row align-items-center mb-3 p-3" 
+                         style="background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.05); transition:0.3s;">
 
-            <div class="col-1">${obj.vname}</div>
-            <div class="col-2">${obj.vemail}</div>
-            <div class="col-1">${obj.vcity}</div>
-            <div class="col-1">${obj.vservice}</div>
-            <div class="col-2">${obj.vsubservice}</div>
-            <div class="col-1">${obj.vprice}</div>
-            <div class="col-2">${obj.vcontact}</div>
-            <div class="col-1">${obj.status}</div>
-            <div class="col-1">
+                        <div class="col-1">${obj.vname}</div>
+                        <div class="col-2">${obj.vemail}</div>
+                        <div class="col-1">${obj.vcity}</div>
+                        <div class="col-1">${obj.vservice}</div>
+                        <div class="col-2">${obj.vsubservice}</div>
+                        <div class="col-1">${obj.vprice}</div>
+                        <div class="col-2">${obj.vcontact}</div>
+                        <div class="col-1">${obj.status}</div>
+                        <div class="col-1">
                             ${
                             obj.status === "blocked"
                             ? `<button class="btn btn-success btn-sm toggle-btn" 
@@ -122,9 +123,8 @@
                             style="border-radius:20px; padding:4px 12px; font-size:12px;" 
                             onclick="blockedVendor(${obj.vid})">Blocked</button>`
                             }
-            </div>
-
-        </div>`;
+                        </div>
+                    </div>`;
                 }
 
                 document.getElementById("d1").innerHTML = s;
@@ -161,22 +161,42 @@
             // ------- SEPARATE HTML HANDLING FUNCTIONS ---------
 
             function renderAfterApprove(ans) {
-                console.log(ans);
                 if (ans.trim() === "success") {
-                    alert("Vendor approved successfully!");
-                    fetchVendors();  // reload vendors list
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Vendor Approved',
+                        text: 'Vendor approved successfully.'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetchVendors(); // Refresh after user confirms
+                        }
+                    });
                 } else {
-                    alert("Something went wrong: " + ans);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Approval Failed',
+                        text: 'Something went wrong: ' + ans
+                    });
                 }
             }
 
             function renderAfterBlock(ans) {
-                console.log(ans);
                 if (ans.trim() === "success") {
-                    alert("Vendor blocked successfully!");
-                    fetchVendors();  // reload vendors list
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Vendor Blocked',
+                        text: 'Vendor blocked successfully.'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetchVendors(); // Refresh after user confirms
+                        }
+                    });
                 } else {
-                    alert("Something went wrong: " + ans);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Blocking Failed',
+                        text: 'Something went wrong: ' + ans
+                    });
                 }
             }
             function fetchVendors() {
