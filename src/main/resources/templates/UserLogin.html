@@ -25,6 +25,10 @@
         <link rel="stylesheet" href="css/style.css">
         <!-- page title -->
         <title>Cleandy</title>
+        
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+        
         <style>
             span.text-yellow:hover {
                 color: black !important;
@@ -86,6 +90,89 @@
                     alert("Enter Right Credentials!!!");
                  }
             }
+            
+            
+            
+            function forgot()
+            {
+                var email8 = document.getElementById("uemail").value;
+                otp = Math.floor(1000 + Math.random() * 9000);
+
+                if (!email8)
+                {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Enter Email',
+                        text: 'Please Enter Email First'
+                    });
+                } else {
+                    var url = "/forgot?email=" + email8 + "&otp=" + otp;
+                    fetch(url)
+                            .then(response => response.text())
+                            .then(ans => renderAsHtml5(ans));
+                }
+            }
+
+            function renderAsHtml5(ans) {
+                if (ans === "success") {
+                    Swal.fire({
+                        title: 'Enter OTP',
+                        html:
+                                '<input type="text" id="otpInput" class="swal2-input" placeholder="Enter OTP">' +
+                                '<button onclick="verifyOtpFromModal()" class="swal2-confirm swal2-styled" style="margin-top: 10px;">Verify OTP</button>',
+                        showConfirmButton: false
+                    });
+
+
+                    
+
+
+                } else if (ans === "fail") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Invalid Email',
+                        text: 'Email not registered for User'
+                    });
+                } else {
+                    alert(ans);
+                }
+            }
+
+            function verifyOtpFromModal() {
+                        var inp = document.getElementById("otpInput").value;
+                        if (otp == inp)
+                        {
+                            var email = document.getElementById("uemail").value;
+                            var url = "/otpverify?email=" + email;
+                            fetch(url)
+                                    .then(response => response.text())
+                                    .then(ans => {
+                                        if (ans === "success")
+                                        {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Otp Success',
+                                                text: 'Please Check Your Email for the Password'
+                                            });
+
+                                        } else if (ans === "fail")
+                                        {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Otp Invalid',
+                                                text: 'Please Check Your Email for the OTP'
+                                            });
+                                        }
+                                    });
+                        } else {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Invalid Otp',
+                                text: 'Please Enter Valid Otp'
+                            });
+                        }
+
+                    }
         </script>
 
     </head>
@@ -394,7 +481,7 @@
                                                 <span class="mil-fs-16">|</span>
                                             </div>
                                             <div class="col-5 d-flex mil-aic mil-jcs mt-2 mil-mb-15">
-                                                <span class="mil-fs-16 mx-3 text-yellow" style="cursor: pointer; text-decoration: underline;" onclick="forgotPassword()">Forgot Password</span>
+                                                <span class="mil-fs-16 mx-3 text-yellow" style="cursor: pointer; text-decoration: underline;" onclick="forgot()">Forgot Password</span>
                                             </div>
 
 
