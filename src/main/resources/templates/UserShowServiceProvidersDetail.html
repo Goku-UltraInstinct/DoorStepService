@@ -104,7 +104,8 @@
                 document.getElementById("vdesc").textContent = arr[0].vdesc;
                 document.getElementById("vcontact").textContent = arr[0].vcontact;
                 document.getElementById("vprice").textContent = arr[0].vprice;
-
+                userShowRatings();
+                averageRating();
             }
 
             function call()
@@ -185,6 +186,123 @@
 
             function renderAddReviewResponse(ans) {
                 alert(ans);
+                userShowRatings();
+                averageRating();
+            }
+
+
+
+            function userShowRatings() {
+
+                //1. Make object of XMLHttpRequest
+                var xhttp = new XMLHttpRequest();
+
+                //4. Receive XMLHttpResponse from server & use ans
+
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var res = this.responseText;
+                        res = res.trim();
+                        var mainobj = JSON.parse(res);
+                        var arr = mainobj["ans"];
+
+                        var ren = "";
+
+                        for (var i = 0; i < arr.length; i++)
+                        {
+                            var st = arr[i];
+                            ren += "<div class=\"row\" >";
+
+                            ren += "<div class= \"col-sm-3\" style=\"text-align: center\" >";
+                            ren += "<div class=\"card-body\">";
+                            for (var j = 0; j < st.rating; j++) {
+                                ren += "<img class=\"img-thumbnail\" style=\"border: 2px solid black; border-radius: 10px;width: 20px; height: 20px\" src=\"rating/filled_star.png\" >";
+                            }
+                            for (var j = st.rating; j < 5; j++) {
+                                ren += "<img class=\"img-thumbnail\" style=\"border: 2px solid black; border-radius: 10px;width: 20px; height: 20px\" src=\"rating/empty_star.png\" >";
+                            }
+                            ren += "</div>";
+                            ren += "</div>";
+
+                            ren += "<div class= \"col-sm-3\" style=\"text-align: center\" >";
+                            ren += "<div class=\"card-body\">";
+                            ren += "<label class=\"card-text text-alli\" style=\"font-size: 16px;text-align: center;color: #005b9a\" ><b>Comment : </b><br>" + st.comment + "</label><br><br>";
+                            ren += "</div>";
+                            ren += "</div>";
+
+                            ren += "<div class= \"col-sm-3\" style=\"text-align: center\" >";
+                            ren += "<div class=\"card-body\">";
+                            ren += "<label class=\"card-text text-alli\" style=\"font-size: 16px;text-align: center;color: #005b9a\" ><b>User Email : </b><br>" + st.user_email + "</label><br><br>";
+                            ren += "</div>";
+                            ren += "</div>";
+                            ren += "</div>";
+
+                        }
+
+                        document.getElementById("showratings").innerHTML = ren;
+
+                    }
+                };
+                //2. Prepare request (Define target --> servlet)
+                xhttp.open("GET", "./userShowRatings?vendor_email=" + vendor_email, true);
+
+                //3. Send Request
+                xhttp.send();
+            }
+
+
+            function averageRating() {
+
+                //1. Make object of XMLHttpRequest
+                var xhttp = new XMLHttpRequest();
+
+                //4. Receive XMLHttpResponse from server & use ans
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var res = this.responseText;
+                        res = res.trim();
+                        //                        alert(res);
+                        var mainobj = JSON.parse(res);
+                        var arr = mainobj["ans"];
+
+                        var ren = "";
+
+                        var st = arr[0];
+                        var rating2 = st.r1;
+                        var getdecimal = rating2.toString().split(".")[1];
+                        if (parseInt(getdecimal) == 0) {
+                            ren += "<div class= \"col-sm-12\" style=\"text-align: center\" >";
+                            ren += "<div class=\"card-body\">";
+                            for (var j = 0; j < st.r1; j++) {
+                                ren += "<img class=\"img-thumbnail\" style=\"border: 2px solid black; border-radius: 10px;width: 20px; height: 20px\" src=\"rating/filled_star.png\" >";
+                            }
+                            for (var j = st.r1; j < 5; j++) {
+                                ren += "<img class=\"img-thumbnail\" style=\"border: 2px solid black; border-radius: 10px;width: 20px; height: 20px\" src=\"rating/empty_star.png\" >";
+                            }
+                            ren += "</div>";
+                            ren += "</div>";
+                        } else {
+                            ren += "<div class= \"col-sm-12\" style=\"text-align: center\" >";
+                            ren += "<div class=\"card-body\">";
+                            for (var j = 0; j < st.r1 - 1; j++) {
+                                ren += "<img class=\"img-thumbnail\" style=\"border: 2px solid black; border-radius: 10px;width: 20px; height: 20px\" src=\"rating/filled_star.png\" >";
+                            }
+                            ren += "<img class=\"img-thumbnail\" style=\"border: 2px solid black; border-radius: 10px;width: 20px; height: 20px\" src=\"rating/download.jpg\" >";
+                            for (var j = st.r1; j < 4; j++) {
+                                ren += "<img class=\"img-thumbnail\" style=\"border: 2px solid black; border-radius: 10px;width: 20px; height: 20px\" src=\"rating/empty_star.png\" >";
+                            }
+                            ren += "</div>";
+                            ren += "</div>";
+                        }
+
+                        document.getElementById("averagerating").innerHTML = ren;
+                    }
+                };
+                //2. Prepare request (Define target --> servlet)
+                xhttp.open("GET", "./userShowAverageRatings?vendor_email=" + vendor_email, true);
+
+                //3. Send Request
+                xhttp.send();
             }
 
 
@@ -200,7 +318,7 @@
             <div th:replace="UserHeader :: header">
 
             </div>
-            
+
             <div class="mil-discount-popup">
                 <div class="mil-popup-window">
                     <div class="mil-envelope-top">
@@ -505,6 +623,17 @@
 
 
                                     </div>
+                                </div>
+
+                                <h2  style="text-align: center; margin-top: 50px" >Average Rating</h2>
+                                <div id="averagerating" >
+
+                                </div>
+
+
+                                <h2 style="text-align: center; margin-top: 50px" >All Ratings</h2>
+                                <div id="showratings" >
+
                                 </div>
 
 

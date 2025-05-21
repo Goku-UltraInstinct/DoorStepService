@@ -67,7 +67,7 @@ public class UserRestController {
             ResultSet rs = DbLoader.executeSQL("select * from user where uemail='" + email + "' and upass='" + pass + "'");
             if (rs.next()) {
                 session.setAttribute("uid", rs.getInt("uid"));
-                session.setAttribute("uemail",email );
+                session.setAttribute("uemail", email);
                 return "success";
             } else {
                 return "failed";
@@ -264,7 +264,7 @@ public class UserRestController {
         this.email.sendSimpleEmail("hiteshkumar00248@gmail.com", "Hello Everyone this is email testing mode", "Email Testing");
         return "success";
     }
-    
+
     @PostMapping("/UserChangePassword")
     public String changePassword(@RequestParam String oldpass,
             @RequestParam String newpass,
@@ -296,7 +296,7 @@ public class UserRestController {
             return "exception";
         }
     }
-    
+
     @PostMapping("/DirectToChangePassword")
     public String changePassword(@RequestParam String email, @RequestParam String pass, HttpSession session) {
         try {
@@ -311,9 +311,7 @@ public class UserRestController {
             return "exception";
         }
     }
-    
-    
-    
+
     @GetMapping("/forgot")
     public String forgot(@RequestParam String email, @RequestParam String otp) {
         try {
@@ -357,9 +355,8 @@ public class UserRestController {
             return ex.toString();
         }
     }
-    
-    
-        @GetMapping("/userAddReview")
+
+    @GetMapping("/userAddReview")
     public String userAddReview(@RequestParam String vendor_email, @RequestParam int rating, @RequestParam String comment, HttpSession session) {
         String user_email = (String) session.getAttribute("uemail");
         System.out.println(user_email);
@@ -382,7 +379,25 @@ public class UserRestController {
 
         return ans;
     }
-    
-    
+
+    @GetMapping("/userShowRatings")
+    public String userShowRatings(@RequestParam String vendor_email) {
+
+        // Assuming RDBMS_TO_JSON is available as a service or component
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from review_table where vendor_email='" + vendor_email + "' ");
+        System.out.println(ans);
+        return ans;
+
+    }
+
+    @GetMapping("/userShowAverageRatings")
+    public String userShowAverageRatings(@RequestParam String vendor_email) {
+
+        // Assuming RDBMS_TO_JSON is available as a service or component
+        String ans = new RDBMS_TO_JSON().generateJSON("select avg(rating) as r1 from review_table where vendor_email='" + vendor_email + "' ");
+        System.out.println(ans);
+        return ans;
+
+    }
 
 }
