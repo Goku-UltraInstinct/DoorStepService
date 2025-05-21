@@ -23,8 +23,13 @@ public class UserController {
     }
 
     @GetMapping("/ShowServices")
-    public String go4() {
-        return "ShowServices";
+    public String go4(HttpSession session) {
+        Integer uid = (Integer) session.getAttribute("uid");
+        if (uid == null) {
+            return "redirect:/UserLogin";
+        } else {
+            return "ShowServices";
+        }
     }
 
     @GetMapping("/ShowAvailableVendors")
