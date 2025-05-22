@@ -16,7 +16,7 @@ public class AdminRestController {
         try {
             ResultSet rs = DbLoader.executeSQL("select * from admin where email='" + email + "' and pass='" + pass + "'");
             if (rs.next()) {
-//                session.setAttribute("email", email);
+                session.setAttribute("email", email);
                 return "success";
             } else {
                 return "failed";

@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AdminController {
 
     @GetMapping("/AdminLogin")
-    public String go() {
+    public String go(HttpSession session) {
+        session.removeAttribute("email"); // Clear any lingering login session
         return "AdminLogin";
     }
 
