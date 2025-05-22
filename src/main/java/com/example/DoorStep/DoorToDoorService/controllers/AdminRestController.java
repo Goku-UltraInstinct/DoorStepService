@@ -2,6 +2,7 @@ package com.example.DoorStep.DoorToDoorService.Controllers;
 
 import com.example.DoorStep.DoorToDoorService.vmm.DbLoader;
 import com.example.DoorStep.DoorToDoorService.vmm.RDBMS_TO_JSON;
+import jakarta.servlet.http.HttpSession;
 import java.sql.ResultSet;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,10 +12,11 @@ import java.io.*;
 public class AdminRestController {
 
     @PostMapping("/AdminLogin")
-    public String login(@RequestParam String email, @RequestParam String pass) {
+    public String login(@RequestParam String email, @RequestParam String pass, HttpSession session) {
         try {
             ResultSet rs = DbLoader.executeSQL("select * from admin where email='" + email + "' and pass='" + pass + "'");
             if (rs.next()) {
+                session.setAttribute("email", email);
                 return "success";
             } else {
                 return "failed";

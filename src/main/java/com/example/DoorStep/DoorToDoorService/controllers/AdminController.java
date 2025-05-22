@@ -15,12 +15,12 @@ public class AdminController {
     public String go() {
         return "AdminLogin";
     }
-    
+
     @GetMapping("/AdminHome")
     public String go1() {
         return "AdminHome";
     }
-    
+
     @GetMapping("/AdminManageCities")
     public String go2() {
         return "AdminManageCities";
@@ -30,11 +30,10 @@ public class AdminController {
     public String go3() {
         return "AdminManageServices";
     }
-    
-//    @GetMapping("/Adminlogout")
-//    public String logout(HttpSession session)
-//    {
-//        session.invalidate();
-//        return "redirect:/";
-//    }
+
+    @GetMapping("/Adminlogout")
+    public String logout(HttpSession session) {
+        session.removeAttribute("email");
+        return "redirect:/";
+    }
 }

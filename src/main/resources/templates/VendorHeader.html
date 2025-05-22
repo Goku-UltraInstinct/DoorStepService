@@ -8,7 +8,7 @@
     </head>
     <body>
         <div th:fragment="header">
-            <div th:if="${session.uid}">
+            <div th:if="${session.vid}">
                 <div class="mil-preloader-frame">
                     <div class="mil-preloader-content">
                         <img src="img/ui/logo.png" alt="logo">
@@ -31,32 +31,40 @@
                             <nav class="mil-main-menu">
                                 <ul id="swupMenu" class="mil-menu-transition mil-aic mil-m-4">
                                     <li class="mil-has-children mil-current">
-                                        <a href="#">User</a>
+                                        <a href="#">Vendor</a>
                                         <ul>
                                             <li>
-                                                <a href="/UserSignUp">User Sign Up</a>
+                                                <a href="/VendorSignUp">Vendor Sign Up</a>
                                             </li>
                                             <li>
-                                                <a href="/UserLogin">User Login</a>
+                                                <a href="/VendorLogin">Vendor Login</a>
+                                            </li>
+                                            <li>
+                                                <a href="/EditDetail">Edit Personal Details</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="mil-has-children">
+                                        <a href="#">Vendor Management</a>
+                                        <ul>
+                                            <li>
+                                                <a href="/VendorManageBookings">Manage Bookings</a>
+                                            </li>
+                                            <li>
+                                                <a href="/VendorManagePhotos">Manage Uploaded Photos</a>
                                             </li>
                                         </ul>
                                     </li>
                                     <li>
-                                        <a href="/UserChangePassword">Change Password</a>
-                                    </li>
-                                    <li>
-                                        <a href="/UserShowBookingHistory">Show Booking History</a>
-                                    </li>
-                                    <li>
-                                        <a href="/Userlogout">Logout</a>
+                                        <a href="/Vendorlogout">Logout</a>
                                     </li>
                                 </ul>
                             </nav>
                             <div class="mil-right mil-jce">
-                                <!--                                <div class="mil-tp-phone mil-aic mil-mr-60 mil-sm-mr-15">
-                                                                    <i class="far fa-mobile mil-icon mil-sm mil-bg-a-2 mil-m-4 mil-mr-15 mil-sm-hidden" style="padding-top: .2rem"></i>
-                                                                    <a href="tel:+380123456789" class="mil-fw-600" data-no-swup>+1 (049) 129-45X7</a>
-                                                                </div>-->
+                                <!--<div class="mil-tp-phone mil-aic mil-mr-60 mil-sm-mr-15">
+                                    <i class="far fa-mobile mil-icon mil-sm mil-bg-a-2 mil-m-4 mil-mr-15 mil-sm-hidden" style="padding-top: .2rem"></i>
+                                    <a href="tel:+380123456789" class="mil-fw-600" data-no-swup>+1 (049) 129-45X7</a>
+                                </div>-->
                                 <a href="contact.html" class="mil-btn mil-lg mil-bg-a-1 mil-br-xl mil-hover-bri-105 mil-icon-btn mil-hover-scale mil-md-hidden"><span>Clean now</span><i class="far fa-magic mil-bg-m-1 mil-a-1"></i></a>
                                 <div class="mil-menu-btn">
                                     <span></span>
@@ -97,7 +105,7 @@
                     </div>
                 </div>
             </div>
-            <div th:unless="${session.uid}">
+            <div th:unless="${session.vid}">
                 <div class="mil-preloader-frame">
                     <div class="mil-preloader-content">
                         <img src="img/ui/logo.png" alt="logo">

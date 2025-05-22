@@ -8,7 +8,7 @@
     </head>
     <body>
         <div th:fragment="header">
-            <div th:if="${session.uid}">
+            <div th:if="${session.email}">
                 <div class="mil-preloader-frame">
                     <div class="mil-preloader-content">
                         <img src="img/ui/logo.png" alt="logo">
@@ -31,21 +31,16 @@
                             <nav class="mil-main-menu">
                                 <ul id="swupMenu" class="mil-menu-transition mil-aic mil-m-4">
                                     <li class="mil-has-children mil-current">
-                                        <a href="#">User</a>
-                                        <ul>
-                                            <li>
-                                                <a href="/UserSignUp">User Sign Up</a>
-                                            </li>
-                                            <li>
-                                                <a href="/UserLogin">User Login</a>
-                                            </li>
-                                        </ul>
+                                        <a href="/AdminLogin">Admin Login</a>
                                     </li>
                                     <li>
-                                        <a href="/UserChangePassword">Change Password</a>
+                                        <a href="/AdminManageCities">Manage Cities</a>
                                     </li>
                                     <li>
-                                        <a href="/UserShowBookingHistory">Show Booking History</a>
+                                        <a href="/AdminManageServices">Manage Services</a>
+                                    </li>
+                                    <li>
+                                        <a href="/AdminManageServiceProviders">Manage Service Providers</a>
                                     </li>
                                     <li>
                                         <a href="/Userlogout">Logout</a>
@@ -97,7 +92,7 @@
                     </div>
                 </div>
             </div>
-            <div th:unless="${session.uid}">
+            <div th:unless="${session.email}">
                 <div class="mil-preloader-frame">
                     <div class="mil-preloader-content">
                         <img src="img/ui/logo.png" alt="logo">

@@ -1,5 +1,6 @@
 package com.example.DoorStep.DoorToDoorService.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -46,10 +47,10 @@ public class VendorController {
         return "VendorManageBookings";
     }
 
-//    @GetMapping("/Vendorlogout")
-//    public String logout(HttpSession session)
-//    {
-//        session.invalidate();
-//        return "redirect:/";
-//    }
+    @GetMapping("/Vendorlogout")
+    public String logout(HttpSession session)
+    {
+        session.removeAttribute("vid");
+        return "redirect:/";
+    }
 }
