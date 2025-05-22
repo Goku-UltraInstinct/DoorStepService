@@ -176,9 +176,10 @@ public class VendorRestController {
     }
 
     @PostMapping("/AdminShowPhotos")
-    public String showPhotos() {
+    public String showPhotos(HttpSession session) {
         try {
-            String sql = "SELECT * FROM photos";
+            Integer vid = (Integer) session.getAttribute("vid");
+            String sql = "SELECT * FROM photos where vid = '"+vid+"'";
             RDBMS_TO_JSON rdbms = new RDBMS_TO_JSON();
             String ans = rdbms.generateJSON(sql);
             return ans;
