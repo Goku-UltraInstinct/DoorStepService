@@ -28,7 +28,8 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             function go() {
-                var email = document.getElementById("user-name").value;
+                console.log("Login button clicked");
+                var email = document.getElementById("user-email").value;
                 var password = document.getElementById("pass-word").value;
 
                 if (!email || !password) {
@@ -47,6 +48,7 @@
                             .then(ans => renderHTML(ans));
                 }
             }
+
 
             function renderHTML(ans)
             {
@@ -86,7 +88,7 @@
             <div th:replace="AdminHeader :: header">
 
             </div>
-            
+
             <div class="mil-discount-popup">
                 <div class="mil-popup-window">
                     <div class="mil-envelope-top">
@@ -240,16 +242,17 @@
                                         <div class="row">
                                             <div class="col-6 mil-mb-15">
                                                 <div class="mil-input-frame">
-                                                    <input type="text" id="user-name" name="user-name" placeholder="Email" class="mil-br-md mil-bg-m-3" autocomplete="name">
-                                                    <i class="far fa-user mil-a-2"></i>
+                                                    <input type="email" id="user-email" name="user-email" placeholder="Email" class="mil-br-md mil-bg-m-3" autocomplete="email">
+                                                    <i class="far fa-at mil-a-2"></i>
                                                 </div>
                                             </div>
                                             <div class="col-6 mil-mb-15">
                                                 <div class="mil-input-frame">
-                                                    <input type="email" id="pass-word" name="pass-word" placeholder="Password" class="mil-br-md mil-bg-m-3" autocomplete="email">
-                                                    <i class="far fa-at mil-a-2"></i>
+                                                    <input type="password" id="pass-word" name="pass-word" placeholder="Password" class="mil-br-md mil-bg-m-3" autocomplete="current-password">
+                                                    <i class="far fa-lock mil-a-2"></i>
                                                 </div>
                                             </div>
+
                                             <div class="col-lg-12 mil-aic">
                                                 <p class="mil-fs-14 mil-m-2">By clicking the send button, you agree to the rules for processing personal data</p>
                                                 <button  class="mil-btn mil-bg-a-1 mil-br-xl mil-hover-bri-105 mil-hover-scale mil-ml-60 mil-sm-ml-30" type="button" onclick="go()">Login</button>
