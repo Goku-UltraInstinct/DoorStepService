@@ -111,10 +111,6 @@
         </script>    
         <!--payemnt script end-->
 
-
-
-
-
         <script>
             const params = new URLSearchParams(window.location.search);
             const date = params.get("date");
@@ -139,7 +135,11 @@
                                         'Success!',
                                         'Your booking and payment were recorded successfully.',
                                         'success'
-                                        );
+                                        ).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = "/";
+                                    }
+                                });
                             } else {
                                 Swal.fire(
                                         'Error!',
@@ -175,7 +175,7 @@
             <div th:replace="UserHeader :: header">
 
             </div>
-            
+
             <div class="mil-discount-popup">
                 <div class="mil-popup-window">
                     <div class="mil-envelope-top">
